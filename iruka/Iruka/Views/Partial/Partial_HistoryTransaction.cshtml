@@ -1,0 +1,130 @@
+﻿@using Iruka.DAL;
+@{
+    var userId = "";
+    if (HttpContext.Current.Session["UserId"] != null)
+    {
+        userId = HttpContext.Current.Session["UserId"].ToString();
+    }
+}
+@section css{}
+@section js{
+}
+<!--
+@if (userId == "")
+{
+    <div>
+        <table class="table table-hover table-bordered" id="historyTable" style="width:100%;height:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Email </th>
+                    <th> Phone </th>
+                    <th> Address </th>
+                    <th> Description  </th>
+                    <th> Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in DALUsers.GetAllUserBaseOnRole("Admin"))
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Address</td>
+                        <td>@item.Description</td>
+                        <td style="width:10%">
+                            <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("EditAdmin", "Users", new {id = item.Id })'" style="min-width:50px">
+                                <i class="mdi mdi-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger btn-fw" onclick="deleteAdmin('@item.Id')" style="min-width:50px">
+                                <i class="mdi mdi-delete"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+    -->
+<div class="col-md-12 ">
+   <label>Transaction History</label>
+    <div class="table-responsive" style="overflow-y:scroll;height:200px">
+        <table class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Transaction Type</th>
+                    <th>Point</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>15 November 2019</td>
+                    <td>Product</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>16 November 2019</td>
+                    <td>Service</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>17 November 2019</td>
+                    <td>Product</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>18 November 2019</td>
+                    <td>Service</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>19 November 2019</td>
+                    <td>Product</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>20 November 2019</td>
+                    <td>Service</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>21 November 2019</td>
+                    <td>Product</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>22 November 2019</td>
+                    <td>Service</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>23 November 2019</td>
+                    <td>Product</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+                <tr>
+                    <td>24 November 2019</td>
+                    <td>Service</td>
+                    <td>1</td>
+                    <td>Transaction Description</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

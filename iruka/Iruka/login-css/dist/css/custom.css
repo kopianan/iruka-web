@@ -1,0 +1,241 @@
+.skin-black .sidebar-menu > li:hover > a,
+
+.skin-black .sidebar-menu > li.active > a {
+
+  background: #38a600;
+
+}
+
+
+.skin-black .main-header .navbar .nav>li>a {
+
+    color: #fff;
+
+  border-left: none!important;
+
+}
+table td { padding:1px!important; }
+
+
+.skin-black .main-header .navbar {
+
+  background-color: #333;
+
+
+
+}
+
+
+
+.skin-black .main-header > .logo {
+    
+    padding-top: 5px;
+  background-color: #333;
+
+  color: #fff;
+
+  border-bottom: 0 solid transparent;
+
+  border-right: 0px;
+
+}
+
+
+
+.skin-black .wrapper,
+
+.skin-black .main-sidebar,
+
+.skin-black .left-side {
+
+  background-color: #333;
+
+}
+
+
+
+.login-page,
+.register-page {
+    /* The image used */
+    background: url('/login-css/dist/img/login-background.jpg') no-repeat center center fixed;
+    /*
+    background: url('/dist/img/Plaza-MAREIN.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    */
+}
+
+
+
+.login-box,
+
+.register-box {
+  width: 460px;
+  margin: 12% auto;
+}
+
+.login-box-body, .register-box-body {
+    background: rgba(255, 255, 255,1) !important;
+    border-radius: 15px;
+}
+
+.bottom-right {
+    position: fixed;
+    bottom: 8px;
+    right: 16px;
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+}
+
+
+ol.carousel-indicators {
+
+  position: relative;
+
+  display: block;
+
+  left: 0;
+
+  text-align: left;
+
+  margin-left: 0;
+
+  /* padding-top: 30px; */
+
+  bottom: 0;
+
+}
+
+
+
+.carousel-indicators li {
+
+  border: 2px solid #333;
+
+}
+
+
+
+.box {
+
+  padding: 15px;
+
+  border-top: none;
+
+}
+
+
+
+.box p {
+
+  line-height: normal
+
+}
+
+
+
+.box-body,
+
+.box-header {
+
+  padding: 0px;
+
+}
+
+
+
+.carousel-indicators .active {
+
+    width: 12px;
+
+    height: 12px;
+
+    margin: 0;
+
+    background-color: #38a600;
+
+}
+
+
+
+.form-horizontal .control-label {
+
+  text-align: left;
+
+}
+
+
+
+.user-panel.active {
+
+    background-color: #38a600;
+
+}
+
+
+
+.status-active {
+
+  color: green;
+
+}
+
+.status-inactive {
+
+  color: red;
+
+}
+
+
+
+.close {
+
+    padding: 0px 4px;
+
+    border: 1px solid #aaa;
+
+    border-radius: 50%;
+
+}
+
+
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+
+  background-color: #333;
+
+  color: #fff;
+
+  border-radius: 0px;
+
+}
+
+.nav-tabs>li>a {
+
+  border: 1px solid #eee;
+
+  border-radius: 0px;
+
+}
+
+
+
+#dasbor .box-body {
+
+  /* height: 150px;
+
+  overflow: scroll; */
+
+}
+
+
+
+.k-grid colgroup > col {
+
+    width: 150px;
+
+}
+

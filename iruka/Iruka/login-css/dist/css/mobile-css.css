@@ -1,0 +1,63 @@
+﻿
+@media (max-width:320px) { /* smartphones, iPhone, portrait 480x320 phones */
+    .board {
+        width: 100%; 
+    }
+    .users {
+        width: 100%;
+    }
+}
+
+
+@media (max-width:360px) { /* smartphones, iPhone, portrait 480x320 phones */
+    .board {
+        width: 100%;
+    }
+
+    .users {
+        width: 100%;
+    }
+}
+
+
+@media (max-width:411px) { /* smartphones, iPhone, portrait 480x320 phones */
+    .board {
+        width: 100%;
+    }
+
+    .users {
+        width: 100%;
+    }
+}
+
+
+@media (max-width:375px) { /* smartphones, iPhone, portrait 480x320 phones */
+    .board {
+        width: 100%;
+    }
+
+    .users {
+        width: 100%;
+    }
+}
+
+
+@media (max-width:414px) { /* smartphones, iPhone, portrait 480x320 phones */
+    .board {
+        width: 100%;
+    }
+
+    .users {
+        width: 100%;
+    }
+}
+
+@media (max-width:375px) { /* smartphones, iPhone, portrait 480x320 phones */
+    .board {
+        width: 100%;
+    }
+
+    .users {
+        width: 100%;
+    }
+}

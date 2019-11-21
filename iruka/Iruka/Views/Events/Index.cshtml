@@ -1,0 +1,208 @@
+﻿@using Iruka.DAL
+@model Iruka.Models.EventDTO
+
+@{
+    ViewBag.Title = "Index";
+    var tempNumber = 1;
+}
+@section css{
+
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/template/src/assets/css/shared/style.css">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="~/template/src/assets/css/demo_1/style.css">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" href="~/template/src/assets/images/favicon.png" />
+
+    <style>
+        .inner-addon {
+            position: relative;
+        }
+
+            .inner-addon .glyphicon {
+                position: absolute;
+                padding: 15px;
+                pointer-events: none;
+            }
+
+        .left-addon .glyphicon {
+            left: 0px;
+        }
+
+        .right-addon .glyphicon {
+            right: 0px;
+        }
+
+        .left-addon input {
+            padding-left: 30px;
+        }
+
+        .right-addon input {
+            padding-right: 30px;
+        }
+    </style>
+}
+@section js{
+    <script src="~/Scripts/js/event.js"></script>
+}
+<body>
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Events", FormMethod.Post))
+                            {
+                                <div class="col-lg-12">
+                                    <div class="row" style="margin-bottom:5px">
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <label>Name</label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    @Html.TextBoxFor(m => m.EventName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.EventName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <label>Link</label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    @Html.TextBoxFor(m => m.Link, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Link, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <label>Schedule Date</label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="inner-addon right-addon">
+                                                        <i class="glyphicon fa fa-calendar" style="padding:9px"></i>
+                                                        @Html.EditorFor(model => model.ScheduleDate, new { htmlAttributes = new { @class = "form-control", @id = "ScheduleDate", @data_date = "", @data_date_format = "dd MM yyyy", @data_link_field = "dtp_input2", @data_link_format = "yyyy-mm-dd", autocomplete = "off", @style = "height:30px" } })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom:5px">
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <label>Address</label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="input-group col-xs-12">
+                                                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <label>Upload Picture</label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
+                                                    <input type="file" name="files" id="pictureUploader" class="form-control" />
+                                                    @Html.ValidationMessageFor(m => m.Picture, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <div>
+                                                <div>
+                                                    <button type="submit" class="btn btn-success btn-fw" id="btnSubmitEvent">Create</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="overflow:auto">
+                                <div style="float:left">
+                                    <h4 class="card-title">Event Table</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <table class="table table-hover table-bordered" id="gridTable">
+                                    <thead>
+                                        <tr>
+                                            <th> No </th>
+                                            <th style="display:none"> </th>
+                                            <th style="display:none"> </th>
+                                            <th> Name </th>
+                                            <th> Description </th>
+                                            <th> Link </th>
+                                            <th> ScheduleDate </th>
+                                            <th> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in DALEvents.GetAllEvent().OrderBy(x => x.Priority))
+                                        {
+                                            <tr>
+                                                <td>@tempNumber</td>
+                                                <td style="display:none">@item.Priority</td>
+                                                <td style="display:none">@item.Id</td>
+                                                <td>@item.EventName</td>
+                                                <td>@item.Description</td>
+                                                <td>@item.Link</td>
+                                                <td>@item.ScheduleDate</td>
+                                                <td style="width:10%">
+                                                    <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("Edit", "Events", new {id = item.Id })'" style="min-width:50px">
+                                                        <i class="mdi mdi-pencil" style="margin:0px"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-fw" onclick="deleteProduct('@item.Id')" style="min-width:50px">
+                                                        <i class="mdi mdi-delete" style="margin:0px"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            tempNumber += 1;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+            <div class="container-fluid clearfix">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block"></span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+                </span>
+            </div>
+        </footer>
+        <!-- partial -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+</body>

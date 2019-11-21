@@ -1,0 +1,132 @@
+﻿@using Iruka.Models
+@model LoginViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>LOGIN</title>
+
+    <link href="/login-css/dist/css/MareInDefault.css" rel="stylesheet" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/login-css/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/login-css/dist/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="/login-css/dist/css/custom.css">
+
+</head>
+<body class="hold-transition login-page">
+    <div style="background:rgba(54, 52, 52, 0.1)">
+        <div class="login-box">
+
+            <!-- /.login-logo -->
+            <div class="login-box-body">
+                <div class="text-center">
+                    <img src="/login-css/dist/img/logo-login.png" alt="Login logo" class="" style="width: 300px;margin-top: 10px;margin-bottom: -15px;">
+                </div>
+                <br>
+                <br>
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = "/Tests/Index" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.ValidationSummary(true)
+
+                    <div class="form-group" style="margin-left:0px !important;margin-right:0px !important">
+                        <div class="input-group has-feedback">
+                            <span class="input-group-addon">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            @Html.TextBoxFor(Model => Model.Email, new { @placeholder = "Username", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback" style="margin-left:0px !important;margin-right:0px !important">
+                        <div class="input-group has-feedback">
+                            <span class="input-group-addon">
+                                <i class="fa fa-unlock"></i>
+                            </span>
+                            @Html.PasswordFor(Model => Model.Password, new { @placeholder = "Password", @class = "form-control", @id = "pass", @maxlength = "16", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            <a href="#" id="btn-show" class="input-group-addon toggle-password" toggle="#pass">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group text-center" style="margin-left:0px !important;margin-right:0px !important">
+                        <button type="submit" id="signIn" class="text-uppercase btn btn-warning btn-block btn-flat">Sign In</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- /.login-box -->
+    <!-- jQuery 2.2.3 -->
+    <!-- Bootstrap 3.3.6 -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="/login-css/lumcore/js/bootstrap.min.js"></script>
+    <script src="~/login-css/dist/js/Login.js"></script>
+    <!-- iCheck -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+
+        $(function () {
+            $(".toggle-password").click(function () {
+                $(".toggle-password i").toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

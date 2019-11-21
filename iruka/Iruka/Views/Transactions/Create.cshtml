@@ -1,0 +1,403 @@
+﻿@using Iruka.DAL
+@model Iruka.Models.ProductDTO
+
+@{
+    ViewBag.Title = "Index";
+    var tempNumber = 1;
+}
+@section css{
+
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/template/src/assets/css/shared/style.css">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="~/template/src/assets/css/demo_1/style.css">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" href="~/template/src/assets/images/favicon.png" />
+
+    <style>
+        .inner-addon {
+            position: relative;
+        }
+
+            .inner-addon .glyphicon {
+                position: absolute;
+                padding: 15px;
+                pointer-events: none;
+            }
+
+        .left-addon .glyphicon {
+            left: 0px;
+        }
+
+        .right-addon .glyphicon {
+            right: 0px;
+        }
+
+        .left-addon input {
+            padding-left: 30px;
+        }
+
+        .right-addon input {
+            padding-right: 30px;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        div label input {
+            margin-right: 100px;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        legend {
+            margin-bottom: 0%;
+            border: 0px;
+            width: auto;
+            padding: 0px 5px;
+            font-size: 1rem;
+        }
+
+        fieldset {
+            border: 2px solid;
+            border-radius: 10px !important;
+            color: gray !important;
+            display: inline-block !important;
+            padding-left: 0.75em;
+            padding-right: 0.75em;
+            width: 100%;
+        }
+
+        .coupon {
+            width: 200px;
+            height: 40px;
+            position: relative;
+            background: #EFBA0A;
+        }
+
+            .coupon:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 0;
+                height: 0;
+                border-left: 20px solid white;
+                border-top: 20px solid transparent;
+                border-bottom: 20px solid transparent;
+            }
+
+            .coupon:before {
+                content: "";
+                position: absolute;
+                right: -20px;
+                bottom: 0;
+                width: 0;
+                height: 0;
+                border-left: 20px solid #EFBA0A;
+                border-top: 20px solid transparent;
+                border-bottom: 20px solid transparent;
+            }
+
+        div.ctn {
+            min-height: 150px;
+            min-width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle
+        }
+
+        #ck-button {
+            margin: 4px;
+            background-color: #EFEFEF;
+            border-radius: 4px;
+            border: 1px solid #D0D0D0;
+            overflow: auto;
+            float: left;
+        }
+
+            #ck-button label {
+                float: left;
+                width: 100%;
+            }
+
+                #ck-button label span {
+                    text-align: center;
+                    padding-top: 20px;
+                    padding-right: 30px;
+                    padding-bottom: 20px;
+                    padding-left: 20px;
+                    border-radius: 4px;
+                }
+
+                #ck-button label input {
+                    position: absolute;
+                    top: -20px;
+                }
+
+            #ck-button input:hover + span {
+                background-color: #6ba9d6;
+            }
+
+            #ck-button input:checked + span {
+                background-color: #6582d4;
+                color: #fff;
+            }
+
+            #ck-button input:checked:hover + span {
+                background-color: #44568a;
+                color: #fff;
+            }
+    </style>
+}
+@section js{
+    <script src="~/Scripts/js/transaction.js"></script>
+}
+<body>
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div style="padding:30px;width:100%">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="col-12" style="height:100%;padding:0px 10px 10px 10px;">
+                            <div class="card" style="height:100%">
+                                <div class="card-header" style="background:#f0f3f5;padding:0.5rem 1.81rem">
+                                    <label>Profile</label>
+                                </div>
+                                <div class="card-body">
+                                    <div class="col-12 row">
+                                        <div class="col-4">
+                                            <label>Input Scan</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control" id="scanId" />
+                                        </div>
+                                        <div class="col-2">
+                                            <button class="btn btn-warning" id="btnInputUserId">Input</button>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:1%">
+                                        <fieldset>
+                                            <legend>User Information</legend>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <div class="d-inline-block" style="width:200px;">
+                                                        <img id="imgProfile" src="~/Media/avatar-placeholder.png" style="max-width:100%;max-height:100%;border-radius:50%" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <fieldset>
+                                                        <legend>Name</legend>
+                                                        <label style="font-size:12px" id="nameProfile">-</label>
+                                                    </fieldset>
+                                                    <fieldset>
+                                                        <legend>Address</legend>
+                                                        <label style="font-size:12px" id="addressProfile">-</label>
+                                                    </fieldset>
+                                                    <fieldset>
+                                                        <legend>Email</legend>
+                                                        <label style="font-size:12px" id="emailProfile">-</label>
+                                                    </fieldset>
+                                                    <fieldset>
+                                                        <legend>Phone</legend>
+                                                        <label style="font-size:12px" id="phoneProfile">-</label>
+                                                    </fieldset>
+                                                    <fieldset style="margin-bottom:2%">
+                                                        <legend>Description</legend>
+                                                        <label style="font-size:12px" id="descProfile">-</label>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <div id="transactionHistoryForm" style="" class="d-none">
+                                        <div id="reloadTable" style="padding:5%;">
+                                            @Html.Partial("/Views/Partial/Partial_HistoryTransaction.cshtml")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="col-12" style="padding:0px 10px 10px 10px">
+                            <div class="card" style="height:100%;">
+                                <div class="card-header" style="background:#f0f3f5;padding:0.5rem 1.81rem">
+                                    <label>Point</label>
+                                </div>
+                                <div class="card-body">
+                                    <div class="col-12">
+                                        <div class="col-12 row" style="margin-bottom:2%">
+                                            <div class="col-6">
+                                                <div class="col-12">
+                                                    <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+                                                        <label>Product Point</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="col-12">
+                                                    <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+                                                        <label>Service Point</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 row" style="margin-top:5%">
+                                            <div class="col-6">
+                                                <div class="col-12 row">
+                                                    <div class="col-4">
+                                                        <img src="~/Media/bag.png" style="width:40px;height:40px" />
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+                                                            <label id="productPoint">-/-</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="col-12 row">
+                                                    <div class="col-4">
+                                                        <img src="~/Media/service-dog.png" style="width:40px;height:40px" />
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+                                                            <label id="servicePoint">-/-</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12" style="margin-top:5%;padding:0px">
+                                            <fieldset>
+                                                <legend>Last Transaction</legend>
+                                                <div style="padding:5px">
+                                                    <div class="col-12 row">
+                                                        <div class="col-6" style="font-size:small;font-weight:bold;padding:0px">
+                                                            <span>Transaction Type</span>
+                                                        </div>
+                                                        <div class="col-6" style="font-size:small;font-weight:bold;padding:0px">
+                                                            <label id="transTypePoint" style="font-size:small; float: right">-</label>
+                                                        </div>
+                                                        <div class="col-6" style="font-size:small;font-weight:bold;padding:0px">
+                                                            <span>Description</span>
+                                                        </div>
+                                                        <div class="col-6" style="font-size:small;font-weight:bold;padding:0px">
+                                                            <label id="descPoint" style="font-size:small; float: right">-</label>
+                                                        </div>
+                                                        <div class="col-6" style="font-size:small;font-weight:bold;padding:0px">
+                                                            <span>Date</span>
+                                                        </div>
+                                                        <div class="col-6" style="font-size:small;font-weight:bold;padding:0px">
+                                                            <label id="datePoint" style="font-size:small; float: right">-</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card" style="height:100%">
+                                <div class="card-header" style="background:#f0f3f5;padding:0.5rem 1.81rem">
+                                    <label>Transaction</label>
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-12 row">
+                                                <div class="col-6">
+                                                    <div id="ck-button">
+                                                        <label style="margin-bottom:0rem !important">
+                                                            <input type="checkbox" hidden id="chkProduct" onclick="checkCoupon()">
+                                                            <span style="vertical-align:middle;display:inline-block"><img src="~/Media/delivery-package.png" style="width:30px;height:30px;vertical-align:middle;display:inline-block;margin-right:15px" />Product</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div id="ck-button">
+                                                        <label style="margin-bottom:0rem !important">
+                                                            <input type="checkbox" hidden id="chkService" onclick="checkCoupon()">
+                                                            <span style="vertical-align:middle;display:inline-block"><img src="~/Media/product.png" style="width:30px;height:30px;vertical-align:middle;display:inline-block;margin-right:15px" />Service</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 row" style="margin-top:5%">
+                                                <div class="col-12">
+                                                    <fieldset>
+                                                        <legend>Current Transaction</legend>
+                                                        <div style="padding:5px">
+                                                            <div class="col-12 row">
+                                                                <div class="col-10">Product Point</div>
+                                                                <div class="col-2"><label id="currentProductPoint">0</label></div>
+                                                            </div>
+                                                            <div class="col-12 row">
+                                                                <div class="col-10">Service Point</div>
+                                                                <div class="col-2"><label id="currentServicePoint">0</label></div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-12 mt-3 d-none coupon-image">
+                                                    <div id="coupon-container" class="row">
+                                                        <div class="col-12 mb-3 text-center">
+                                                            <div class="coupon  text-center pt-1 d-inline-block">
+                                                                <img src="~/Media/cutting.png" style="width:25px; height:30px; margin-left:17px" />
+                                                                <label id="transactionCoupon" style="display: inline-flex; align-items: center; font-size: smaller">
+                                                                    DISKON 30%
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:5%">
+                                            <div class="col-12">
+                                                <label>Description</label>
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea id="descForm" class="form-control" rows="5"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <button id="submitButton" class="btn btn-success">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+            <div class="container-fluid clearfix">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block"></span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+                </span>
+            </div>
+        </footer>
+        <!-- partial -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+</body>
