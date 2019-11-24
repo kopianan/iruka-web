@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Iruka.EF.Model;
 using Iruka.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Iruka.Controllers
 {
@@ -18,7 +19,7 @@ namespace Iruka.Controllers
         // GET: Coupons
         public ActionResult Index()
         {
-            return View(db.Coupons.ToList());
+            ViewBag.UserId = User.Identity.GetUserId(); return View(db.Coupons.ToList());
         }
 
         // GET: Coupons/Details/5
@@ -33,13 +34,13 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
         }
 
         // GET: Coupons/Create
         public ActionResult Create()
         {
-            return View();
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         // POST: Coupons/Create
@@ -58,7 +59,7 @@ namespace Iruka.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
         }
 
         // GET: Coupons/Edit/5
@@ -73,7 +74,7 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
         }
 
         // POST: Coupons/Edit/5
@@ -89,7 +90,7 @@ namespace Iruka.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
         }
 
         // GET: Coupons/Delete/5
@@ -104,7 +105,7 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
         }
 
         // POST: Coupons/Delete/5

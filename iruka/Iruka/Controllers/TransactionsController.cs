@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Iruka.DAL;
 using Iruka.EF.Model;
 using Iruka.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Iruka.Controllers
 {
@@ -19,7 +20,7 @@ namespace Iruka.Controllers
         // GET: Transactions
         public ActionResult Index()
         {
-            return View(db.Transactions.ToList());
+            ViewBag.UserId = User.Identity.GetUserId(); return View(db.Transactions.ToList());
         }
 
         // GET: Transactions/Details/5
@@ -34,13 +35,13 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            return View(transaction);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(transaction);
         }
 
         // GET: Transactions/Create
         public ActionResult Create()
         {
-            return View();
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         // POST: Transactions/Create
@@ -58,7 +59,7 @@ namespace Iruka.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(transaction);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(transaction);
         }
 
         // GET: Transactions/Edit/5
@@ -73,7 +74,7 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            return View(transaction);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(transaction);
         }
 
         // POST: Transactions/Edit/5
@@ -89,7 +90,7 @@ namespace Iruka.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(transaction);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(transaction);
         }
 
         // GET: Transactions/Delete/5
@@ -104,7 +105,7 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            return View(transaction);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(transaction);
         }
 
         // POST: Transactions/Delete/5

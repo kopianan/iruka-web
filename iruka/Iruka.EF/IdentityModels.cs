@@ -18,6 +18,12 @@ namespace Iruka.Models
         public string Picture { get; set; }
         public bool isActive { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public ApplicationUser()
+        {
+            isActive = true;
+        }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

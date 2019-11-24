@@ -11,42 +11,70 @@ namespace Iruka.Models
         public string Id { get; set; }
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Email*")]
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Name")]
+        [Display(Name = "Name*")]
         public string Name { get; set; }
 
-        [Required]
         [Display(Name = "Address")]
         public string Address { get; set; }
 
-        [Required]
-        [Display(Name = "Picture")]
-        public string Picture { get; set; }
-
-        [Required]
-        [Display(Name = "PhoneNumber")]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Required]
         [Display(Name = "Description")]
         public string Description { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Password*")]
         public string Password { get; set; }
 
-        [Required]
-        public RoleMenuList RoleMenuLists { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password*")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        [Display(Name = "User Role*")]
+        public InternalRoleEnum InternalRoleEnum { get; set; }
+
+        [Display(Name = "User Role*")]
+        public EndClientEnum EndClientEnum { get; set; }
+        public string Picture { get; set; }
+        public string Base64URL { get; set; }
         public string Certificate { get; set; }
+        public string Role { get; set; }
+        public string Base64URLCertificate { get; set; }
     }
 
-    public enum RoleMenuList
+    public enum InternalRoleEnum
     {
-        Admin, Groomer, SuperAdmin,Owner,Finance,ContentManager,Customer
+        Admin,
+        Finance,
+        [Display(Name = "Content Manager")]
+        ContentManager,
+    }
+
+    public enum EndClientEnum
+    {
+        Groomer,
+        Owner,
+        Customer
+    }
+
+    public enum UserRoleEnum
+    {
+        None,
+        SuperAdmin,
+        Admin,
+        Finance,
+        [Display(Name = "Content Manager")]
+        ContentManager,
+        Groomer,
+        Owner,
+        Customer
     }
 }

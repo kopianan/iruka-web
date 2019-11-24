@@ -1,4 +1,5 @@
 ﻿@using Iruka.DAL;
+@using Iruka.Models;
 @{
     var userId = "";
     if (HttpContext.Current.Session["UserId"] != null)
@@ -26,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in DALUsers.GetAllUserBaseOnRole("Admin"))
+                @foreach (var item in DALUsers.GetAllUserBaseOnRole(new List<string> { RoleList.Admin }))
                 {
                     <tr>
                         <td>@item.Id</td>
@@ -51,9 +52,9 @@
 }
     -->
 <div class="col-md-12 ">
-   <label>Transaction History</label>
+    <label>Transaction History</label>
     <div class="table-responsive" style="overflow-y:scroll;height:200px">
-        <table class="table table-bordered" >
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Transaction Date</th>

@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "Css/avatar-upload.css",
+    "inputFile": "Css/avatar-upload.scss"
+  },
+  {
+    "outputFile": "Css/toastr.css",
+    "inputFile": "Css/toastr.scss"
+  }
+]

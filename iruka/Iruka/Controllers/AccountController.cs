@@ -14,6 +14,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Iruka.DAL;
 using System.Collections.Generic;
 using System.Net;
+using AutoMapper;
+using System.Data.Entity;
 
 namespace Iruka.Controllers
 {
@@ -24,6 +26,298 @@ namespace Iruka.Controllers
         private ApplicationUserManager _userManager;
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public ActionResult Dashboard()
+        {
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
+        }
+
+        public ActionResult InternalUserRegister()
+        {
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> InternalUserRegister(UserDTO userDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var picturePath = string.IsNullOrWhiteSpace(userDTO.Picture) ? null : "/Media/UserPicture/" + userDTO.Picture;
+                var certificatePath = string.IsNullOrWhiteSpace(userDTO.Certificate) ? null : "/Media/Certificate/" + userDTO.Certificate;
+                var newUser = new ApplicationUser
+                {
+                    Picture = picturePath,
+                    Certificate = certificatePath,
+                    Name = userDTO.Name,
+                    PhoneNumber = userDTO.PhoneNumber ?? "",
+                    Address = userDTO.Address ?? "",
+                    Email = userDTO.Email,
+                    UserName = userDTO.Email,
+                    Description = userDTO.Description ?? "",
+                    CreatedDate = DateTime.Now
+                };
+                var result = await UserManager.CreateAsync(newUser, userDTO.Password);
+
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrWhiteSpace(userDTO.Picture))
+                    {
+                        var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
+                        Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+                    }
+                    await SignInManager.SignInAsync(newUser, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("CoRegisterViewModelsnfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                    if (!await roleManager.RoleExistsAsync(Enum.GetName(typeof(InternalRoleEnum), Enum.Parse(typeof(InternalRoleEnum), userDTO.InternalRoleEnum.ToString()))))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(Enum.GetName(typeof(InternalRoleEnum), Enum.Parse(typeof(InternalRoleEnum), userDTO.InternalRoleEnum.ToString()))));
+                        await UserManager.AddToRoleAsync(newUser.Id, Enum.GetName(typeof(InternalRoleEnum), Enum.Parse(typeof(InternalRoleEnum), userDTO.InternalRoleEnum.ToString())));
+                    }
+                    else
+                    {
+                        await UserManager.AddToRoleAsync(newUser.Id, Enum.GetName(typeof(InternalRoleEnum), Enum.Parse(typeof(InternalRoleEnum), userDTO.InternalRoleEnum.ToString())));
+                    }
+
+                    ViewBag.UserId = User.Identity.GetUserId(); db.SaveChanges();
+                    return RedirectToAction("InternalUserRegister");
+                }
+
+                AddErrors(result);
+            }
+
+            ViewBag.AccountExisted = "Email is already taken!";
+            ViewBag.UserId = User.Identity.GetUserId(); return View(userDTO);
+        }
+
+        public ActionResult EndUserRegister()
+        {
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EndUserRegister(UserDTO userDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var picturePath = string.IsNullOrWhiteSpace(userDTO.Picture) ? null : "/Media/UserPicture/" + userDTO.Picture;
+                var certificatePath = string.IsNullOrWhiteSpace(userDTO.Certificate) ? null : "/Media/Certificate/" + userDTO.Certificate;
+                var newUser = new ApplicationUser
+                {
+                    Picture = picturePath,
+                    Certificate = certificatePath,
+                    Name = userDTO.Name,
+                    PhoneNumber = userDTO.PhoneNumber ?? "",
+                    Address = userDTO.Address ?? "",
+                    Email = userDTO.Email,
+                    UserName = userDTO.Email,
+                    Description = userDTO.Description ?? "",
+                    CreatedDate = DateTime.Now
+                };
+                var result = await UserManager.CreateAsync(newUser, userDTO.Password);
+
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrWhiteSpace(userDTO.Picture))
+                    {
+                        var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
+                        Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+                    }
+                    if (userDTO.EndClientEnum == EndClientEnum.Groomer)
+                    {
+                        if (!string.IsNullOrWhiteSpace(userDTO.Certificate))
+                        {
+                            var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Certificate");
+                            Global.SaveBase64DataUrlFile(userDTO.Base64URLCertificate, userDTO.Certificate, savePath);
+                        }
+                    }
+                    await SignInManager.SignInAsync(newUser, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("CoRegisterViewModelsnfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                    if (!await roleManager.RoleExistsAsync(Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString()))))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString()))));
+                        await UserManager.AddToRoleAsync(newUser.Id, Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString())));
+                    }
+                    else
+                    {
+                        await UserManager.AddToRoleAsync(newUser.Id, Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString())));
+                    }
+
+                    ViewBag.UserId = User.Identity.GetUserId(); db.SaveChanges();
+                    return RedirectToAction("EndUserRegister");
+                }
+
+                AddErrors(result);
+            }
+
+            ViewBag.AccountExisted = "Email is already taken!";
+            ViewBag.UserId = User.Identity.GetUserId(); return View(userDTO);
+        }
+
+        private async Task ClearAllRolesFromUser(string id)
+        {
+            var roles = await UserManager.GetRolesAsync(id);
+            await UserManager.RemoveFromRolesAsync(id, roles.ToArray());
+        }
+
+        public ActionResult InternalUserEdit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ApplicationUser user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            var userDTO = Mapper.Map<ApplicationUser, UserDTO>(user);
+            userDTO.InternalRoleEnum = DALUsers.GetInternalUserRoleEnum(userDTO.Id);
+
+            return View(userDTO);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> InternalUserEdit(UserDTO userDTO)
+        {
+            var targetUser = db.Users.Find(userDTO.Id);
+
+            targetUser.Name = userDTO.Name;
+            targetUser.PhoneNumber = userDTO.PhoneNumber;
+            targetUser.Address = userDTO.Address;
+            targetUser.Description = userDTO.Description;
+
+            if (targetUser.Picture != userDTO.Picture)
+            {
+                targetUser.Picture = string.IsNullOrWhiteSpace(userDTO.Picture) ? "" : "/Media/UserPicture/" + userDTO.Picture;
+                var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
+                Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+            }
+
+            var roleStore = new RoleStore<IdentityRole>(db);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+            await ClearAllRolesFromUser(targetUser.Id);
+            db.Entry(targetUser).State = EntityState.Modified;
+            if (!await roleManager.RoleExistsAsync(userDTO.InternalRoleEnum.ToString()))
+            {
+                await roleManager.CreateAsync(new IdentityRole(userDTO.InternalRoleEnum.ToString()));
+                await UserManager.AddToRoleAsync(targetUser.Id, userDTO.InternalRoleEnum.ToString());
+            }
+            else
+            {
+                await UserManager.AddToRoleAsync(targetUser.Id, userDTO.InternalRoleEnum.ToString());
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("InternalUserRegister");
+        }
+
+        public ActionResult EndUserEdit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ApplicationUser user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            var userDTO = Mapper.Map<ApplicationUser, UserDTO>(user);
+            userDTO.EndClientEnum = DALUsers.GetEndUserRoleEnum(userDTO.Id);
+
+            return View(userDTO);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EndUserEdit(UserDTO userDTO)
+        {
+            var targetUser = db.Users.Find(userDTO.Id);
+
+            targetUser.Name = userDTO.Name;
+            targetUser.PhoneNumber = userDTO.PhoneNumber;
+            targetUser.Address = userDTO.Address;
+            targetUser.Description = userDTO.Description;
+
+            if (targetUser.Picture != userDTO.Picture)
+            {
+                targetUser.Picture = string.IsNullOrWhiteSpace(userDTO.Picture) ? "" : "/Media/UserPicture/" + userDTO.Picture;
+                var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
+                Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+            }
+
+            var roleStore = new RoleStore<IdentityRole>(db);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+            await ClearAllRolesFromUser(targetUser.Id);
+            db.Entry(targetUser).State = EntityState.Modified;
+            if (!await roleManager.RoleExistsAsync(userDTO.EndClientEnum.ToString()))
+            {
+                await roleManager.CreateAsync(new IdentityRole(userDTO.EndClientEnum.ToString()));
+                await UserManager.AddToRoleAsync(targetUser.Id, userDTO.EndClientEnum.ToString());
+            }
+            else
+            {
+                await UserManager.AddToRoleAsync(targetUser.Id, userDTO.EndClientEnum.ToString());
+            }
+
+            if (userDTO.EndClientEnum == EndClientEnum.Groomer)
+            {
+                if (targetUser.Certificate != userDTO.Certificate)
+                {
+                    targetUser.Certificate = string.IsNullOrWhiteSpace(userDTO.Certificate) ? "" : "/Media/Certificate/" + userDTO.Certificate;
+                    var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Certificate");
+                    Global.SaveBase64DataUrlFile(userDTO.Base64URLCertificate, userDTO.Certificate, savePath);
+                }
+            }
+            else
+            {
+                targetUser.Certificate = "";
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("EndUserRegister");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteUser(string id)
+        {
+            try
+            {
+                ApplicationUser targetUser = db.Users.Find(id);
+                targetUser.isActive = false;
+                db.Entry(targetUser).State = EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
         public AccountController()
         {
@@ -58,18 +352,19 @@ namespace Iruka.Controllers
                 _userManager = value;
             }
         }
- 
-        //
-        // GET: /Account/Login
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            if (User.Identity.GetUserId() == null)
+            {
+                ViewBag.ReturnUrl = returnUrl;
+                return View();
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
-        //
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
@@ -86,7 +381,16 @@ namespace Iruka.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToAction("Dashboard","Users");
+                    var targetUser = db.Users.SingleOrDefault(x => x.Email == model.Email);
+
+                    if (targetUser.isActive)
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                    ModelState.AddModelError("", "Your account is inactive, please contact Administrator!");
+                    return View(model);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -98,8 +402,6 @@ namespace Iruka.Controllers
             }
         }
 
-        //
-        // GET: /Account/VerifyCode
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
@@ -111,8 +413,6 @@ namespace Iruka.Controllers
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        //
-        // POST: /Account/VerifyCode
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -141,87 +441,6 @@ namespace Iruka.Controllers
             }
         }
 
-        // GET: /Account/Register
-        [AllowAnonymous]
-        public ActionResult Users()
-        {
-            return View();
-
-        }
-
-        //
-        // GET: /Account/Register
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return View();
-
-        }
-
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> Register(UserDTO model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("CoRegisterViewModelsnfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
-                    var roleManager = new RoleManager<IdentityRole>(roleStore);
-
-                    if (!await roleManager.RoleExistsAsync(Enum.GetName(typeof(RoleMenuList), model.RoleMenuLists)))
-                    {
-                        await roleManager.CreateAsync(new IdentityRole(Enum.GetName(typeof(RoleMenuList), model.RoleMenuLists)));
-                        await UserManager.AddToRoleAsync(user.Id, Enum.GetName(typeof(RoleMenuList), model.RoleMenuLists));
-                    }
-                    else
-                    {
-                        await UserManager.AddToRoleAsync(user.Id, Enum.GetName(typeof(RoleMenuList), model.RoleMenuLists));
-                    }
-
-                    db.SaveChanges();
-                    ViewBag.UserId = User.Identity.GetUserId();
-                    return RedirectToAction("Index");
-                }
-                AddErrors(result);
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        private async Task AddUserRoleToSpecificUser(string roleName, bool isGivenAccess, string userId)
-        {
-            var isInRole = await UserManager.IsInRoleAsync(userId, roleName);
-            if (isGivenAccess)
-            {
-                if (!isInRole)
-                {
-                    await UserManager.AddToRoleAsync(userId, roleName);
-                }
-            }
-            else
-            {
-                if (isInRole)
-                {
-                    await UserManager.RemoveFromRoleAsync(userId, roleName);
-                }
-            }
-        }
-        //
-        // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -233,16 +452,12 @@ namespace Iruka.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
-        //
-        // GET: /Account/ForgotPassword
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
             return View();
         }
 
-        //
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -269,24 +484,18 @@ namespace Iruka.Controllers
             return View(model);
         }
 
-        //
-        // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
 
-        //
-        // GET: /Account/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
             return code == null ? View("Error") : View();
         }
 
-        //
-        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -311,16 +520,12 @@ namespace Iruka.Controllers
             return View();
         }
 
-        //
-        // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
         }
 
-        //
-        // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -330,8 +535,6 @@ namespace Iruka.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
-        // GET: /Account/SendCode
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
@@ -345,8 +548,6 @@ namespace Iruka.Controllers
             return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        //
-        // POST: /Account/SendCode
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -365,8 +566,6 @@ namespace Iruka.Controllers
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
-        //
-        // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -395,8 +594,6 @@ namespace Iruka.Controllers
             }
         }
 
-        //
-        // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -433,8 +630,6 @@ namespace Iruka.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -443,14 +638,11 @@ namespace Iruka.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //
-        // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
         }
-      
 
         #region Helpers
         // Used for XSRF protection when adding external logins

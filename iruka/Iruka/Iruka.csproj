@@ -223,7 +223,9 @@
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.min.css">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
     <Content Include="Content\dataTables.bootstrap.min.css" />
     <Content Include="Content\dataTables.semanticui.min.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -235,6 +237,18 @@
     <Content Include="Content\kendo.material.mobile.min.css" />
     <Content Include="Content\rowReorder.dataTables.min.css" />
     <Content Include="Content\semantic.min.css" />
+    <Content Include="Css\avatar-upload.css">
+      <DependentUpon>avatar-upload.scss</DependentUpon>
+    </Content>
+    <Content Include="Css\avatar-upload.min.css">
+      <DependentUpon>avatar-upload.css</DependentUpon>
+    </Content>
+    <Content Include="Css\toastr.css">
+      <DependentUpon>toastr.scss</DependentUpon>
+    </Content>
+    <Content Include="Css\toastr.min.css">
+      <DependentUpon>toastr.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -390,6 +404,13 @@
     <Content Include="login-css\lumcore\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="login-css\lumcore\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="login-css\lumcore\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Css\avatar-upload.scss" />
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <Content Include="Css\toastr.scss" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1-vsdoc.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.css" />
@@ -462,8 +483,15 @@
     <Content Include="Scripts\js\event.js" />
     <Content Include="Scripts\js\main.js" />
     <Content Include="Scripts\js\product.js" />
+    <Content Include="Scripts\js\toastr.js" />
+    <Content Include="Scripts\js\toastr.min.js">
+      <DependentUpon>toastr.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\js\transaction.js" />
     <Content Include="Scripts\js\user.js" />
+    <Content Include="Scripts\js\user.min.js">
+      <DependentUpon>user.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\kendo.all.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\sweetalert2.all.min.js" />
@@ -5055,8 +5083,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -5065,7 +5091,6 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -5280,39 +5305,11 @@
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.eot" />
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Views\Frm_Login.cshtml" />
     <Content Include="Views\Tests\Table.cshtml" />
     <Content Include="Views\Tests\Form.cshtml" />
     <Content Include="Views\Tests\EventTable.cshtml" />
     <Content Include="Views\Tests\EventForm.cshtml" />
-    <Content Include="Views\Account\Users.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Users\Delete.cshtml" />
-    <Content Include="Views\Users\Details.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Users\RegisterAdmin.cshtml" />
-    <Content Include="Views\Users\RegisterGroomer.cshtml" />
-    <Content Include="Views\Users\RegisterOwner.cshtml" />
-    <Content Include="Views\Users\RegisterSuperAdmin.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterAdmin.cshtml" />
-    <Content Include="Views\Users\EditAdmin.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterGroomer.cshtml" />
-    <Content Include="Views\Users\EditGroomer.cshtml" />
-    <Content Include="Views\Users\RegisterCustomer.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterCustomer.cshtml" />
-    <Content Include="Views\Users\EditCustomer.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterOwner.cshtml" />
-    <Content Include="Views\Users\EditOwner.cshtml" />
-    <Content Include="Views\Users\EditSuperAdmin.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterSuperAdmin.cshtml" />
-    <Content Include="Views\Users\RegisterFinance.cshtml" />
-    <Content Include="Views\Users\EditFinance.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterFinance.cshtml" />
-    <Content Include="Views\Users\RegisterContentManager.cshtml" />
-    <Content Include="Views\Users\EditContentManager.cshtml" />
-    <Content Include="Views\Partial\Partial_RegisterContentManager.cshtml" />
-    <Content Include="Views\Users\Dashboard.cshtml" />
+    <Content Include="Views\Partial\Partial_InternalUsersTable.cshtml" />
     <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Products\Delete.cshtml" />
     <Content Include="Views\Products\Details.cshtml" />
@@ -5334,6 +5331,11 @@
     <Content Include="Views\Transactions\Edit.cshtml" />
     <Content Include="Views\Transactions\Index.cshtml" />
     <Content Include="Views\Partial\Partial_HistoryTransaction.cshtml" />
+    <Content Include="Views\Account\InternalUserRegister.cshtml" />
+    <Content Include="Views\Account\EndUserRegister.cshtml" />
+    <Content Include="Views\Account\InternalUserEdit.cshtml" />
+    <Content Include="Views\Partial\Partial_EndUsersTable.cshtml" />
+    <Content Include="Views\Account\EndUserEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -5341,7 +5343,6 @@
     <Folder Include="Media\Event\" />
     <Folder Include="Media\Product\" />
     <Folder Include="Media\UserPicture\" />
-    <Folder Include="Views\Role\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

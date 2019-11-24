@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>LOGIN</title>
+    <title>Login - Iruka</title>
 
     <link href="/login-css/dist/css/MareInDefault.css" rel="stylesheet" />
 
@@ -39,9 +39,9 @@
                 </div>
                 <br>
                 <br>
-                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = "/Tests/Index" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
-                    @Html.ValidationSummary(true)
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                     <div class="form-group" style="margin-left:0px !important;margin-right:0px !important">
                         <div class="input-group has-feedback">

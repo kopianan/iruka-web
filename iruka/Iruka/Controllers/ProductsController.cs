@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using Iruka.EF.Model;
 using Iruka.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Iruka.Controllers
 {
@@ -21,13 +22,13 @@ namespace Iruka.Controllers
         // GET: Products
         public ActionResult Index()
         {
-            return View();
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         // GET: Products/Create
         public ActionResult Create()
         {
-            return View();
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         // POST: Products/Create
@@ -58,7 +59,7 @@ namespace Iruka.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(productDto);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(productDto);
         }
 
         // GET: Products/Edit/5
@@ -97,7 +98,7 @@ namespace Iruka.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(product);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(product);
         }
 
         public void UpdateRow( int fromPosition, int toPosition)

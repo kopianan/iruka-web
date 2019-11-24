@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using Iruka.EF.Model;
 using Iruka.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Iruka.Controllers
 {
@@ -21,13 +22,13 @@ namespace Iruka.Controllers
         // GET: eventss
         public ActionResult Index()
         {
-            return View();
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         // GET: eventss/Create
         public ActionResult Create()
         {
-            return View();
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         // POST: eventss/Create
@@ -59,7 +60,7 @@ namespace Iruka.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(eventDto);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(eventDto);
         }
 
         // GET: eventss/Edit/5
@@ -76,7 +77,7 @@ namespace Iruka.Controllers
             }
             var eventsDTO = Mapper.Map<Event, EventDTO>(events);
 
-            return View(eventsDTO);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(eventsDTO);
         }
 
         // POST: Tests/Edit/5
@@ -98,7 +99,7 @@ namespace Iruka.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(events);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(events);
         }
 
         public void UpdateRow(int fromPosition, int toPosition)

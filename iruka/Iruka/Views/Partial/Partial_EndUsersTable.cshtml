@@ -1,36 +1,35 @@
-﻿@using Iruka.DAL;
+﻿@using Iruka.Models;
+@using Iruka.DAL;
 
 @section css{}
 @section js{
 }
 <div>
-    <table class="table table-hover table-bordered" id="adminTable">
+    <table class="table table-hover table-bordered" id="user-table">
         <thead>
             <tr>
-                <th></th>
+                <th> Role </th>
                 <th> Name </th>
                 <th> Email </th>
                 <th> Phone </th>
                 <th> Address </th>
-                <th> Description  </th>
                 <th> Action </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in DALUsers.GetAllUserBaseOnRole("Customer"))
+            @foreach (var item in DALUsers.GetAllUserBaseOnRole(new List<string> { RoleList.Groomer, RoleList.Owner, RoleList.Customer }))
             {
                 <tr>
-                    <td>@item.Id</td>
+                    <td>@item.Role</td>
                     <td>@item.Name</td>
                     <td>@item.Email</td>
                     <td>@item.PhoneNumber</td>
                     <td>@item.Address</td>
-                    <td>@item.Description</td>
                     <td style="width:10%">
-                        <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("EditCustomer", "Users", new {id = item.Id })'" style="min-width:50px">
+                        <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("EndUserEdit", "Account", new {id = item.Id })'" style="min-width:50px">
                             <i class="mdi mdi-pencil" style="margin:0px"></i>
                         </button>
-                        <button class="btn btn-danger btn-fw" onclick="deleteCustomer('@item.Id')" style="min-width:50px">
+                        <button type="button" class="btn btn-danger btn-fw" onclick="deleteUser('@item.Id', false)" style="min-width:50px">
                             <i class="mdi mdi-delete" style="margin:0px"></i>
                         </button>
                     </td>

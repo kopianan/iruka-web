@@ -12,6 +12,7 @@ namespace Iruka.App_Start
     {
         public MappingProfile()
         {
+            Mapper.CreateMap<ApplicationUser, UserDTO>();
             Mapper.CreateMap<Product, ProductDTO>();
             Mapper.CreateMap<ProductDTO, Product>();
             Mapper.CreateMap<EventDTO, Event>();

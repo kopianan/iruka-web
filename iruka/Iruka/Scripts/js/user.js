@@ -1,618 +1,176 @@
-﻿var PictureUrl = "";
-var CertificateUrl = "";
-var userID = "";
+﻿let imageDataUrl = "";
+let imageName = "";
+let imageExtension = "";
+let certificateDataUrl = "";
+let certificateName = "";
+let certificateExtension = "";
 
-// #region UPLOAD
-$("#pictureUploader").kendoUpload({
-    multiple: false,
-    localization: {
-        select: 'Choose Picture'
-    },
-    async: {
-        saveUrl: "/Users/SavePicture",
-        autoUpload: true
-    },
-    success: onSuccess,
-    remove:onRemove,
-    validation: {
-        allowedExtensions: [".jpeg", ".jpg", ".png"]
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        if (input.files[0].size > 30194304) {
+            toastr.error('3mb is maximum accepted file size!');
+            input.value = "";
+        } else {
+            let acceptableFileTypes = ['jpg', 'jpeg', 'png'];
+            let reader = new FileReader();
+            let extension = input.files[0].name.split('.').pop().toLowerCase(),
+                isSuccess = acceptableFileTypes.indexOf(extension) > -1;
+
+            if (extension == "jpg") {
+                extension = "jpeg";
+            }
+
+            if (isSuccess) {
+                reader.fileName = input.files[0].name;
+                reader.onload = function (e) {
+                    $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+                    $('#imagePreview').hide();
+                    $('#imagePreview').fadeIn(650);
+
+                    imageDataUrl = e.target.result;
+                    imageName = e.target.fileName;
+                    imageExtension = extension;
+
+                    $('#Base64URL').val(imageDataUrl.replace("data:image/" + imageExtension + ";base64,", ""));
+                    $('#PicturePath').val(imageName);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                toastr.error(`Can't read file name!`)
+            }
+        }
     }
-});
-function onSuccess(e) {
-    PictureUrl = e.response.success;
-    $("#PicturePath").val(PictureUrl);
-}
-function onRemove(e) {
-    var PictA = $("#pictureUploader").data().kendoUpload;
-    var RemovingPictA = PictA.wrapper.find('.k-file');
-    PictA._removeFileEntry(RemovingPictA);
 }
 
-$("#certificateUploader").kendoUpload({
-    multiple: false,
-    localization: {
-        select: 'Choose Picture'
-    },
-    async: {
-        saveUrl: "/Users/SavingCertificate",
-        autoUpload: true
-    },
-    success: onSuccessCertificate,
-    remove: onRemoveCertificate,
-    validation: {
-        allowedExtensions: [".jpeg", ".jpg", ".png"]
+$("#imageUpload").change(function () {
+    readURL(this);
+});
+
+function readURLCertificate(input) {
+    if (input.files && input.files[0]) {
+        if (input.files[0].size > 30194304) {
+            toastr.error('3mb is maximum accepted file size!');
+            input.value = "";
+        } else {
+            let acceptableFileTypes = ['jpg', 'jpeg', 'png'];
+            let reader = new FileReader();
+            let extension = input.files[0].name.split('.').pop().toLowerCase(),
+                isSuccess = acceptableFileTypes.indexOf(extension) > -1;
+
+            if (extension == "jpg") {
+                extension = "jpeg";
+            }
+
+            if (isSuccess) {
+                reader.fileName = input.files[0].name;
+                reader.onload = function (e) {
+                    $('#certificatePreview').css('background-image', 'url(' + e.target.result + ')');
+                    $('#certificatePreview').hide();
+                    $('#certificatePreview').fadeIn(650);
+
+                    certificateDataUrl = e.target.result;
+                    certificateName = e.target.fileName;
+                    certificateExtension = extension;
+
+                    $('#Base64URLCertificate').val(certificateDataUrl.replace("data:image/" + certificateExtension + ";base64,", ""));
+                    $('#CertificatePath').val(certificateName);
+                    $('.certificate-container').removeClass('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                toastr.error(`Can't read file name!`)
+            }
+        }
     }
-});
-function onSuccessCertificate(e) {
-    CertificateUrl = e.response.success;
-    $("#CertificatePath").val(CertificateUrl);
-}
-function onRemoveCertificate(e) {
-    var PictA = $("#certificateUploader").data().kendoUpload;
-    var RemovingPictA = PictA.wrapper.find('.k-file');
-    PictA._removeFileEntry(RemovingPictA);
 }
 
-// #endregion
-
-// #region REGISTER
-$("#btnSubmitRegisterContentManager").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "ContentManager" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadContentManagerTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
-});
-$("#btnSubmitRegisterFinance").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "Finance" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadFinanceTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
-});
-$("#btnSubmitRegisterSuperAdmin").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "SuperAdmin" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadSuperAdminTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
-});
-$("#btnSubmitRegisterAdmin").click(function() {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "Admin" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function(data) { return data; },
-        success: function(data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadAdminTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
+$("#certificateUpload").change(function () {
+    readURLCertificate(this);
 });
 
-$("#btnSubmitRegisterGroomer").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    var certificateName = CertificateUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','certificate':'" + certificateName[6] +
-            "','desc': '" + $("#Description").val() + "','role': '" + "Groomer" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
+function initDataTable() {
+    try {
+        dataTable = $('#user-table').DataTable({
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            "pageLength": 10,
+            "scrollX": true,
+            paging: true,
+            "order": [],
+            "info": false,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            dom: 'Bfrtip'
+        });
+    } catch (err) {
+        toastr.error(`There has been an error initiating the DataTable! Error: ${err}`);
+    }
 
-                var PictA = $("#certificateUploader").data().kendoUpload;
-                var RemovingPictA = PictA.wrapper.find('.k-file');
-                PictA._removeFileEntry(RemovingPictA);
 
-                Swal.fire('Success created user');
-                reloadGroomerTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
-});
-
-$("#btnSubmitRegisterCustomer").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "Customer" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadCustomerTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
-});
-
-$("#btnSubmitRegisterOwner").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Users/UserRegistration",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "Owner" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadOwnerTable();
-            } else {
-                Swal.fire('Failed to create user, please check your input again');
-            }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
-        }
-    });
-});
-// #endregion
-
-function InitDataTable() {
-
-    datatable = $('#adminTable').DataTable({
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets: 0,
-            checkboxes: {
-                'selectRow': true
-            }
-        }],
-        "pageLength": 10,
-        "scrollX": true,
-        "language": {
-            "paginate": {
-                "previous": "<<",
-                "next": ">>"
-            }
-        },
-        select: true,
-        paging: true,
-        "order": [[0, "asc"]],
-        "info": false,
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": true,
-        "bInfo": false,
-        "bAutoWidth": false,
-        dom: 'Bfrtip'
-    });
 }
 
-// #region DELETE
-function deleteContentManager(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function (data) { return data; },
-                success: function (data) {
-                    if (data["success"] != undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadContentManagerTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
+function deleteUser(id, internalUser) {
+    $.confirm({
+        title: 'Delete user ?',
+        content: `You won't be able to revert this!`,
+        buttons: {
+            yes: {
+                text: 'Yes!',
+                btnClass: 'btn-red',
+                action: function () {
+                    $.ajax({
+                        async: false,
+                        url: "/Account/DeleteUser",
+                        data: "{ 'id': '" + id + "' }",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataFilter: function (data) { return data; },
+                        success: function (data) {
+                            if (data["success"] != undefined) {
+                                $.alert('Deleted successfully!');
+
+                                if (internalUser) {
+                                    window.location.replace("/Account/InternalUserRegister");
+                                } else {
+                                    window.location.replace("/Account/EndUserRegister");
+                                }
+                            } else {
+                                $.alert({
+                                    title: 'Encountered an error!',
+                                    content: `Can't delete user, please contact support!`,
+                                    text: 'Cancelled!',
+                                    type: 'orange',
+                                    typeAnimated: true
+                                });
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            //alert(errorThrown);
+                        }
+                    });
                 }
-            });
-        }
-    });
-}
-function deleteFinance(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function (data) { return data; },
-                success: function (data) {
-                    if (data["success"] != undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadFinanceTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
+            },
+            cancel: {
+                text: 'Cancel!',
+                btnClass: 'btn-green',
+                keys: ['enter'],
+                action: function () {
+                    $.alert('Cancelled!');
                 }
-            });
+            }
         }
     });
 }
-function deleteSuperAdmin(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function (data) { return data; },
-                success: function (data) {
-                    if (data["success"] != undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadSuperAdminTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
-                }
-            });
-        }
-    });
-}
-function deleteOwner(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function (data) { return data; },
-                success: function (data) {
-                    if (data["success"] != undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadOwnerTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
-                }
-            });
-        }
-    });
-}
-function deleteAdmin(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function(data) { return data; },
-                success: function(data) {
-                    if (data["success"]!=undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadAdminTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
-                }
-            });
-        }
-    });
-}
-function deleteCustomer(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function (data) { return data; },
-                success: function (data) {
-                    if (data["success"] != undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadCustomerTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
-                }
-            });
-        }
-    });
-}
-function deleteGroomer(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Users/DeleteUser",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function (data) { return data; },
-                success: function (data) {
-                    if (data["success"] != undefined) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                        reloadGroomerTable();
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
-                }
-            });
-        }
-    });
-}
-// #endregion
 
-// #region RELOAD
-function reloadFinanceTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterFinanceTable", function () {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-function reloadAdminTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterAdminTable", function() {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-
-function reloadGroomerTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterGroomerTable", function () {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-
-function reloadCustomerTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterCustomerTable", function () {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-
-function reloadOwnerTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterOwnerTable", function () {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-
-function reloadSuperAdminTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterSuperAdminTable", function () {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-
-function reloadContentManagerTable() {
-    $("#reloadTable").load("/Users/ReloadRegisterContentManagerTable", function () {
-        datatable.destroy();
-        InitDataTable();
-    });
-}
-// #endregion
-
-function clearInput() {
-    $("#Name").val("");
-    $("#Email").val("");
-    $("#Password").val("");
-    $("#PhoneNumber").val("");
-    $("#Address").val("");
-    $("#Description").val("");
-    
-    var PictA = $("#pictureUploader").data().kendoUpload;
-    var RemovingPictA = PictA.wrapper.find('.k-file');
-    PictA._removeFileEntry(RemovingPictA);
-}
-$(document).ready(function() {
-    InitDataTable();
+$(document).ready(function () {
+    initDataTable();
 });

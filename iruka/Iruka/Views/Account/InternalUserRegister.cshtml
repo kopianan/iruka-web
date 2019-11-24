@@ -1,0 +1,152 @@
+﻿@model Iruka.Models.UserDTO
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section css{
+
+    <link rel="stylesheet" href="~/template/src/assets/css/shared/style.css">
+    <link rel="stylesheet" href="~/template/src/assets/css/demo_1/style.css">
+    <link rel="shortcut icon" href="~/template/src/assets/images/favicon.png" />
+
+    <link href="~/Css/avatar-upload.min.css" rel="stylesheet" />
+}
+
+@section js{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/js/user.min.js"></script>
+}
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
+    @Html.HiddenFor(m => m.Base64URL, new { @id = "Base64URL" })
+
+    <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Create Internal User</h2>
+                    <hr />
+                    <div class="row">
+                        <div class="offset-lg-4 col-lg-4 col-12">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUpload"></label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview" style="background-image: url('../../Media/avatar-placeholder.png');">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-12">
+                            <fieldset>
+                                <legend>User Information</legend>
+                                <hr />
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.InternalRoleEnum, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.EnumDropDownListFor(m => m.InternalRoleEnum, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.InternalRoleEnum, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Name, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Address, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextAreaFor(m => m.Address, new { @class = "form-control", rows = 2 })
+                                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-lg-6 col-12">
+                            <fieldset>
+                                <legend>Account Credentials</legend>
+                                <hr />
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Email, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                        <p class="text-danger">@ViewBag.AccountExisted</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Password, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Description, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 2 })
+                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success btn-fw float-right">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i><span class="font-weight-bold">Create</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Internal User List</h3>
+                    <hr />
+                    <div id="reloadTable">
+                        @Html.Partial("/Views/Partial/Partial_InternalUsersTable.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
