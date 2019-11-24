@@ -202,13 +202,13 @@
     <Compile Include="DAL\Global.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\TestsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ModelAPI\GetUserByRoleModelRequest.cs" />
     <Compile Include="ModelAPI\LoginModelRequest.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BaseEntityDto.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Models\EventDTO.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -5103,11 +5103,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Tests\Create.cshtml" />
-    <Content Include="Views\Tests\Delete.cshtml" />
-    <Content Include="Views\Tests\Details.cshtml" />
-    <Content Include="Views\Tests\Edit.cshtml" />
-    <Content Include="Views\Tests\Index.cshtml" />
     <Content Include="template\.gitignore" />
     <Content Include="template\.vscode\settings.json" />
     <Content Include="template\CHANGELOG.md" />
@@ -5305,17 +5300,12 @@
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.eot" />
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Views\Tests\Table.cshtml" />
-    <Content Include="Views\Tests\Form.cshtml" />
-    <Content Include="Views\Tests\EventTable.cshtml" />
-    <Content Include="Views\Tests\EventForm.cshtml" />
     <Content Include="Views\Partial\Partial_InternalUsersTable.cshtml" />
     <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Products\Delete.cshtml" />
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
-    <Content Include="Views\Events\Create.cshtml" />
     <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />

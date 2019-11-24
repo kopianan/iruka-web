@@ -12,8 +12,15 @@ namespace Iruka.EF.Model
         public string Description { get; set; }
         public string Link { get; set; }
         public string Picture { get; set; }
-        public int Priority { get; set; }
-        public bool isActive { get; set; }
+        public int? Priority { get; set; }
         public DateTime ScheduleDate { get; set; }
+        public EventStatus EventStatus { get; set; }
+    }
+
+    public enum EventStatus
+    {
+        Pending,
+        OnGoing,
+        Finished
     }
 }

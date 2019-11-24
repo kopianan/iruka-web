@@ -98,12 +98,27 @@
     <Compile Include="Migrations\201911130849235_add-point-at-coupon.Designer.cs">
       <DependentUpon>201911130849235_add-point-at-coupon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911241039431_BaseEntityReadjust.cs" />
+    <Compile Include="Migrations\201911241039431_BaseEntityReadjust.Designer.cs">
+      <DependentUpon>201911241039431_BaseEntityReadjust.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911241756380_AddOnGoingStatusToEvent.cs" />
+    <Compile Include="Migrations\201911241756380_AddOnGoingStatusToEvent.Designer.cs">
+      <DependentUpon>201911241756380_AddOnGoingStatusToEvent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911241846205_OnGoingChangedToEnumEventStatus.cs" />
+    <Compile Include="Migrations\201911241846205_OnGoingChangedToEnumEventStatus.Designer.cs">
+      <DependentUpon>201911241846205_OnGoingChangedToEnumEventStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911241851108_EventPriorityToNullable.cs" />
+    <Compile Include="Migrations\201911241851108_EventPriorityToNullable.Designer.cs">
+      <DependentUpon>201911241851108_EventPriorityToNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\Coupon.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\Product.cs" />
-    <Compile Include="Model\Test.cs" />
     <Compile Include="Model\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -141,6 +156,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911130849235_add-point-at-coupon.resx">
       <DependentUpon>201911130849235_add-point-at-coupon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911241039431_BaseEntityReadjust.resx">
+      <DependentUpon>201911241039431_BaseEntityReadjust.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911241756380_AddOnGoingStatusToEvent.resx">
+      <DependentUpon>201911241756380_AddOnGoingStatusToEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911241846205_OnGoingChangedToEnumEventStatus.resx">
+      <DependentUpon>201911241846205_OnGoingChangedToEnumEventStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911241851108_EventPriorityToNullable.resx">
+      <DependentUpon>201911241851108_EventPriorityToNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

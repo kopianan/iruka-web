@@ -35,7 +35,6 @@ namespace Iruka.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IDbSet<Test> Tests { get; set; }
         public IDbSet<Product> Product { get; set; }
         public IDbSet<Event> Event { get; set; }
         public IDbSet<IdentityUserRole> UserRoles { get; set; }

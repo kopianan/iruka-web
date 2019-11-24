@@ -105,6 +105,17 @@ namespace Iruka.DAL
             var toReturn = (targetUserPicture != null && targetUserPicture != "") ? targetUserPicture : "/Media/avatar-placeholder.png";
             return toReturn;
         }
+        public static string DateToString(DateTime? dateTime)
+        {
+            if (dateTime != null)
+            {
+                return ((DateTime)dateTime).ToString("dd MMMM yyyy");
+            }
+            else
+            {
+                return "-";
+            }
+        }
         public static ApplicationDbContext DB
         {
             get { return new ApplicationDbContext(); }

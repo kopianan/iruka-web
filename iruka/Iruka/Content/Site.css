@@ -5,3 +5,23 @@
 .input-validation-error {
     border: 2px solid red !important;
 }
+
+.mobile-restriction {
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    .mobile-restriction {
+        display: block;
+        z-index: 100000000000000000;
+    }
+
+    .container-scroller {
+        display: none;
+    }
+}

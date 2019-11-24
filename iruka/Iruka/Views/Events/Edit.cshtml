@@ -1,7 +1,7 @@
 ﻿@model Iruka.Models.EventDTO
 
 @{
-    ViewBag.Title = "Edit event";
+    ViewBag.Title = "Edit Event";
 }
 @section css{
     <style>
@@ -30,80 +30,121 @@
         .right-addon input {
             padding-right: 30px;
         }
+
+        .picture-container {
+            margin: 20px auto;
+            width: 400px;
+            height: 220px;
+            position: relative;
+            border: 6px solid #F8F8F8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+            .picture-container > div {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+
+        @@media(max-width: 1365px) {
+            .picture-container {
+                width: 83%;
+            }
+        }
     </style>
 }
 @section js{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/js/event.js"></script>
+
+    <script>
+        $(function () {
+
+        });
+
+        function confirmSubmit(form) {
+            if ($('#PicturePath').val() == "") {
+                toastr.error(`Please upload event picture!`);
+            } else {
+                form.submit();
+            }
+        }
+    </script>
 }
-<div class="main-panel">
-    <div class="content-wrapper">
-        <div class="col-md-6 grid-margin stretch-card">
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
+    @Html.HiddenFor(m => m.Base64URL, new { @id = "Base64URL" })
+
+    <div class="row">
+        <div class="col-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h2>Edit event</h2>
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-
-                        <div class="form-horizontal">
-                            <hr />
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            @Html.HiddenFor(model => model.Id)
-                            @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
-
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.EventName, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-8">
-                                    @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
+                    <h2>
+                        Edit Event
+                        <a href="/Events/Index/"><i class="fa fa-arrow-circle-left float-right" aria-hidden="true"></i></a>
+                    </h2>
+                    <hr />
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group row" id="upload-event-picture-section">
+                                @Html.LabelFor(m => m.Picture, new { @class = "col-12 control-label" })
+                                <div class="col-12">
+                                    <input type="file" id="picture-upload" class="form-control" accept=".png, .jpg, .jpeg" />
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Link, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-8">
-                                    @Html.EditorFor(model => model.Link, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-8">
-                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Picture, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-8">
-                                    <input type="file" name="files" id="pictureUploader" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.ScheduleDate, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-8">
-                                    <div class="inner-addon right-addon">
-                                        <i class="glyphicon fa fa-calendar" style="padding:9px"></i>
-                                        @Html.EditorFor(model => model.ScheduleDate, "dd MM yyyy", new { htmlAttributes = new { @class = "form-control", @id = "ScheduleDate", @data_date = "", @data_date_format = "dd MM yyyy", @data_link_field = "dtp_input2", @data_link_format = "yyyy-mm-dd", autocomplete = "off", @style = "height:30px" } })
-                                        @Html.ValidationMessageFor(model => model.ScheduleDate, "", new { @class = "text-danger" })
+                            <fieldset>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.EventName, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.EventName, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.EventName, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-10">
-                                    <button type="submit" class="btn btn-success mr-2">Save</button>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Link, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.Link, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Link, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Description, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 2 })
+                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.ScheduleDate, new { @class = "col-12 control-label" })
+                                    <div class="col-lg-6 col-12">
+                                        <div class="inner-addon right-addon">
+                                            <i class="glyphicon fa fa-calendar" style="padding:9px"></i>
+                                            @Html.EditorFor(model => model.ScheduleDate, new { htmlAttributes = new { @class = "form-control", @id = "ScheduleDate", @data_date = "", @data_date_format = "dd MM yyyy", @data_link_field = "dtp_input2", @data_link_format = "yyyy-mm-dd", autocomplete = "off", @style = "height:30px" } })
+                                            @Html.ValidationMessageFor(m => m.ScheduleDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button onclick="confirmSubmit(this.form)" type="button" class="btn btn-success float-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Changes</button>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-lg-6 col-12">
+                            <div class="picture-container">
+                                <div id="picture-preview" style="background-image: url('@Model.Picture');">
                                 </div>
                             </div>
                         </div>
-                    }
-                    <div>
-                        @Html.ActionLink("Back to List", "Index")
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+}

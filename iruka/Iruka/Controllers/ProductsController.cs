@@ -39,6 +39,7 @@ namespace Iruka.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
                 var product = Mapper.Map<ProductDTO, Product>(productDto);
                 var getProduct = db.Product.OrderByDescending(item => item.Priority).FirstOrDefault();
                 product.Picture = "/Media/Product/" + product.Picture;
@@ -51,8 +52,7 @@ namespace Iruka.Controllers
                 {
                     product.Priority = getProduct.Priority + 1;
                 }
-                product.Id = Guid.NewGuid();
-                product.isActive = true;
+                product.NewCreatedData(userId);
 
                 db.Product.Add(product);
                 db.SaveChanges();

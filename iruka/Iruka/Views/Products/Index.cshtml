@@ -117,7 +117,7 @@
                                                 </div>
                                                 <div class="col-lg-8">
                                                     @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
-                                                    <input type="file" name="files" id="pictureUploader" aria-label="files"/>
+                                                    <input type="file" name="files" id="pictureUploader" aria-label="files" />
                                                     @Html.ValidationMessageFor(m => m.Picture, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -162,7 +162,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in DALProducts.GetAllProduct().OrderBy(x=>x.Priority))
+                                        @foreach (var item in DALProducts.GetAllProduct())
                                         {
                                             <tr>
                                                 <td>@tempNumber</td>

@@ -114,7 +114,6 @@ function initDataTable() {
         toastr.error(`There has been an error initiating the DataTable! Error: ${err}`);
     }
 
-
 }
 
 function deleteUser(id, internalUser) {

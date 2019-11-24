@@ -9,6 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using Iruka.DAL;
 using Iruka.EF.Model;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
@@ -19,43 +20,26 @@ namespace Iruka.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: eventss
         public ActionResult Index()
         {
             ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
-        // GET: eventss/Create
-        public ActionResult Create()
-        {
-            ViewBag.UserId = User.Identity.GetUserId(); return View();
-        }
-
-        // POST: eventss/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(EventDTO eventDto)
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(EventDTO eventDto)
         {
             if (ModelState.IsValid)
             {
-                var events = Mapper.Map<EventDTO, Event>(eventDto);
+                var userId = User.Identity.GetUserId();
+                var @event = Mapper.Map<EventDTO, Event>(eventDto);
+                var lastPriorityEvent = db.Event.OrderByDescending(item => item.Priority).FirstOrDefault();
+                @event.Picture = string.IsNullOrWhiteSpace(eventDto.Picture) ? null : "/Media/Event/" + eventDto.Picture;
+                @event.NewCreatedData(userId);
 
-                var getevents = db.Event.OrderByDescending(item => item.Priority).FirstOrDefault();
-                events.Picture = "/Media/Event/" + events.Picture;
-
-                if (getevents == null)
-                {
-                    events.Priority = 1;
-                }
-                else
-                {
-                    events.Priority = getevents.Priority + 1;
-                }
-                events.Id = Guid.NewGuid();
-                events.isActive = true;
-
-                db.Event.Add(events);
+                db.Event.Add(@event);
+                var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Event");
+                Global.SaveBase64DataUrlFile(eventDto.Base64URL, eventDto.Picture, savePath);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -63,54 +47,91 @@ namespace Iruka.Controllers
             ViewBag.UserId = User.Identity.GetUserId(); return View(eventDto);
         }
 
-        // GET: eventss/Edit/5
         public ActionResult Edit(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event events = db.Event.Find(id);
-            if (events == null)
+            Event @event = db.Event.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            var eventsDTO = Mapper.Map<Event, EventDTO>(events);
+            var eventDto = Mapper.Map<Event, EventDTO>(@event);
+            eventDto.ScheduleDate = Global.DateToString(@event.ScheduleDate);
 
-            ViewBag.UserId = User.Identity.GetUserId(); return View(eventsDTO);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(eventDto);
         }
 
-        // POST: Tests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id,EventName,Description,Link,Picture,ScheduleDate,CreatedDate")] EventDTO events)
+        public ActionResult Edit(EventDTO eventDTO)
         {
             if (ModelState.IsValid)
             {
-                Event eventsEdited = db.Event.Find(events.Id);
-                var getPicture = events.Picture.Split('\\');
-                eventsEdited.Picture = getPicture[getPicture.Length - 1];
-                eventsEdited.Picture = "/Media/Event/" + eventsEdited.Picture;
-                eventsEdited.EventName = events.EventName;
-                eventsEdited.Description = events.Description;
-                eventsEdited.Link = events.Link;
-                eventsEdited.ScheduleDate = events.ScheduleDate;
+                Event @event = db.Event.Find(eventDTO.Id);
+                @event.EventName = eventDTO.EventName;
+                @event.Link = eventDTO.Link;
+                @event.Description = eventDTO.Description;
+                @event.ScheduleDate = DateTime.Parse(eventDTO.ScheduleDate);
+                @event.SetModifiedData(User.Identity.GetUserId());
+                if (@event.Picture != eventDTO.Picture)
+                {
+                    @event.Picture = string.IsNullOrWhiteSpace(eventDTO.Picture) ? "" : "/Media/Event/" + eventDTO.Picture;
+                    var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Event");
+                    Global.SaveBase64DataUrlFile(eventDTO.Base64URL, eventDTO.Picture, savePath);
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = User.Identity.GetUserId(); return View(events);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(eventDTO);
         }
 
-        public void UpdateRow(int fromPosition, int toPosition)
+        public ActionResult StartEvent(Guid id)
         {
-            using (var ctx = new ApplicationDbContext())
+            try
             {
-                var eventList = ctx.Event.ToList();
-                ctx.Event.First(c => c.Priority == fromPosition).Priority = toPosition;
-                //ctx.Event.First(c => c.Priority == toPosition).Priority = fromPosition;
-                ctx.SaveChanges();
+                Event @event = db.Event.Find(id);
+                @event.EventStatus = EventStatus.OnGoing;
+                var lastPriorityOnGoingEvent = db.Event.Where(x => x.Priority != null).OrderByDescending(item => item.Priority).FirstOrDefault();
+
+                if (lastPriorityOnGoingEvent == null)
+                {
+                    @event.Priority = 1;
+                }
+                else
+                {
+                    @event.Priority = lastPriorityOnGoingEvent.Priority + 1;
+                }
+
+                @event.SetModifiedData(User.Identity.GetUserId());
+                db.SaveChanges();
+                return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
             }
+            catch (Exception)
+            {
+                return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult CompleteEvent(Guid id)
+        {
+            try
+            {
+                Event @event = db.Event.Find(id);
+                @event.EventStatus = EventStatus.Finished;
+                @event.Priority = null;
+                @event.SetModifiedData(User.Identity.GetUserId());
+                db.SaveChanges();
+                return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
+            }
+
         }
 
         #region DELETE
@@ -118,8 +139,8 @@ namespace Iruka.Controllers
         {
             try
             {
-                Event events = db.Event.Find(id);
-                db.Event.Remove(events);
+                Event @event = db.Event.Find(id);
+                @event.SetIsActive(false, User.Identity.GetUserId());
                 db.SaveChanges();
                 return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
             }
@@ -130,6 +151,26 @@ namespace Iruka.Controllers
 
         }
         #endregion
+
+        [HttpPost]
+        public ActionResult UpdateRow(UpdateRowRequest request)
+        {
+            var eventSequence = new List<Event>();
+            var newPrioritySequence = new List<RowData>();
+
+            foreach (var row in request.RowData)
+            {
+                eventSequence.Add(db.Event.Single(x => x.Priority == row.oldData));
+                newPrioritySequence.Add(new RowData() { oldData = row.oldData, newData = row.newData });
+            }
+
+            foreach (var @event in eventSequence)
+            {
+                @event.Priority = newPrioritySequence.Single(x => x.oldData == @event.Priority).newData;
+            }
+
+            return Json(new { }, JsonRequestBehavior.AllowGet);
+        }
 
         #region Upload
         [HttpPost]
@@ -171,7 +212,6 @@ namespace Iruka.Controllers
             RemovePicture(fileNames);
             return Json(new { error = "Insert Error : Inserted data not valid" }, JsonRequestBehavior.AllowGet);
         }
-
         public static Image ResizeImage(string pathName)
         {
 
@@ -222,5 +262,16 @@ namespace Iruka.Controllers
 
         }
         #endregion
+
+        public class UpdateRowRequest
+        {
+            public List<RowData> RowData { get; set; }
+        }
+
+        public class RowData
+        {
+            public int oldData { get; set; }
+            public int newData { get; set; }
+        }
     }
 }

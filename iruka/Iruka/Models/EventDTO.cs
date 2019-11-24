@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Iruka.Models
 {
-    public class EventDTO
+    public class EventDTO : BaseEntityDto
     {
         public Guid Id { get; set; }
 
@@ -26,8 +26,11 @@ namespace Iruka.Models
         [Display(Name = "Picture")]
         public string Picture { get; set; }
 
+        [Required]
         [Display(Name = "Schedule Date")]
-        public DateTime ScheduleDate { get; set; }
+        public string ScheduleDate { get; set; }
         public int Priority { get; set; }
+
+        public string Base64URL { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Iruka.DAL
     {
         public static List<ProductDTO> GetAllProduct()
         {
-            var products = Global.DB.Product.Where(x => x.isActive == true).ToList();
+            var products = Global.DB.Product.Where(x => x.IsActive == true).OrderBy(x => x.Priority).ToList();
             var productDTOList = Mapper.Map<List<Product>, List<ProductDTO>>(products);
 
             return productDTOList;
