@@ -58,7 +58,7 @@ $('#ScheduleDate').datetimepicker({
 
 function InitOnGoingEventsDataTable() {
 
-    dataTable = $('#ongoing-events-table').DataTable({
+    onGoingDataTable = $('#ongoing-events-table').DataTable({
         responsive: true,
         "pageLength": 10,
         rowReorder: true,
@@ -73,7 +73,7 @@ function InitOnGoingEventsDataTable() {
 }
 
 function InitPendingEventsDataTable() {
-    dataTable = $('#pending-events-table').DataTable({
+    pendingDataTable = $('#pending-events-table').DataTable({
         responsive: true,
         "pageLength": 10,
         "order": [],
@@ -83,7 +83,7 @@ function InitPendingEventsDataTable() {
 }
 
 function InitFinishedEventsDataTable() {
-    dataTable = $('#finished-events-table').DataTable({
+    finishedDataTable = $('#finished-events-table').DataTable({
         responsive: true,
         "pageLength": 10,
         "order": [],

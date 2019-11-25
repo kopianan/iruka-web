@@ -7,15 +7,8 @@
 }
 @section css{
 
-    <!-- endinject -->
-    <!-- plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
     <link rel="stylesheet" href="~/template/src/assets/css/shared/style.css">
-    <!-- endinject -->
-    <!-- Layout styles -->
     <link rel="stylesheet" href="~/template/src/assets/css/demo_1/style.css">
-    <!-- End Layout styles -->
     <link rel="shortcut icon" href="~/template/src/assets/images/favicon.png" />
 
     <style>
@@ -44,165 +37,243 @@
         .right-addon input {
             padding-right: 30px;
         }
+
+        .picture-container {
+            margin: 20px auto;
+            width: 400px;
+            height: 220px;
+            position: relative;
+            border: 6px solid #F8F8F8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+            .picture-container > div {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+
+        @@media(max-width: 1365px) {
+            .picture-container {
+                width: 83%;
+            }
+        }
     </style>
 }
 @section js{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/js/product.js"></script>
-}
-<body>
-    <div class="main-panel">
-        <div class="content-wrapper">
-            <div class="row">
-                <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            @using (Html.BeginForm("Create", "Products", FormMethod.Post))
-                            {
-                                <div class="col-lg-12">
-                                    <div class="row" style="margin-bottom:5px">
-                                        <div class="col-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label>Name</label>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label>Link</label>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    @Html.TextBoxFor(m => m.Link, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.Link, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label>Schedule Date</label>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    <div class="inner-addon right-addon">
-                                                        <i class="glyphicon fa fa-calendar" style="padding:9px"></i>
-                                                        @Html.EditorFor(model => model.ScheduleDate, new { htmlAttributes = new { @class = "form-control", @id = "ScheduleDate", @data_date = "", @data_date_format = "dd MM yyyy", @data_link_field = "dtp_input2", @data_link_format = "yyyy-mm-dd", autocomplete = "off", @style = "height:30px" } })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-bottom:5px">
-                                        <div class="col-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label>Address</label>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    <div class="input-group col-xs-12">
-                                                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label>Upload Picture</label>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
-                                                    <input type="file" name="files" id="pictureUploader" aria-label="files" />
-                                                    @Html.ValidationMessageFor(m => m.Picture, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-8">
-                                            <div>
-                                                <div>
-                                                    <button type="submit" class="btn btn-success btn-fw" id="btnSubmitProduct">Create</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div style="overflow:auto">
-                                <div style="float:left">
-                                    <h4 class="card-title">Product Table</h4>
-                                </div>
-                            </div>
-                            <div>
-                                <table class="table table-hover table-bordered" id="gridTable">
-                                    <thead>
-                                        <tr>
-                                            <th> No </th>
-                                            <th style="display:none"> </th>
-                                            <th style="display:none"> </th>
-                                            <th> Name </th>
-                                            <th> Description </th>
-                                            <th> Link </th>
-                                            <th> ScheduleDate </th>
-                                            <th> Action </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in DALProducts.GetAllProduct())
-                                        {
-                                            <tr>
-                                                <td>@tempNumber</td>
-                                                <td style="display:none">@item.Priority</td>
-                                                <td style="display:none">@item.Id</td>
-                                                <td>@item.ProductName</td>
-                                                <td>@item.Description</td>
-                                                <td>@item.Link</td>
-                                                <td>@item.ScheduleDate</td>
-                                                <td style="width:10%">
-                                                    <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("Edit", "Products", new {id = item.Id })'" style="min-width:50px">
-                                                        <i class="mdi mdi-pencil" style="margin:0px"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-fw" onclick="deleteProduct('@item.Id')" style="min-width:50px">
-                                                        <i class="mdi mdi-delete" style="margin:0px"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            tempNumber += 1;
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
 
+    <script>
+        $(function () {
+
+        });
+
+        function confirmSubmit(form) {
+            if ($('#PicturePath').val() == "") {
+                toastr.error(`Please upload product picture!`);
+            } else {
+                form.submit();
+            }
+        }
+    </script>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Picture, new { @id = "PicturePath" })
+    @Html.HiddenFor(m => m.Base64URL, new { @id = "Base64URL" })
+
+    <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Create Product</h2>
+                    <hr />
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group row" id="upload-product-picture-section">
+                                @Html.LabelFor(m => m.Picture, new { @class = "col-12 control-label" })
+                                <div class="col-12">
+                                    <input type="file" id="picture-upload" class="form-control" accept=".png, .jpg, .jpeg" />
+                                </div>
+                            </div>
+                            <fieldset>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.ProductName, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Link, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.Link, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Link, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Description, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 2 })
+                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.ScheduleDate, new { @class = "col-12 control-label" })
+                                    <div class="col-lg-6 col-12">
+                                        <div class="inner-addon right-addon">
+                                            <i class="glyphicon fa fa-calendar" style="padding:9px"></i>
+                                            @Html.EditorFor(model => model.ScheduleDate, new { htmlAttributes = new { @class = "form-control", @id = "ScheduleDate", @data_date = "", @data_date_format = "dd MM yyyy", @data_link_field = "dtp_input2", @data_link_format = "yyyy-mm-dd", autocomplete = "off", @style = "height:30px" } })
+                                            @Html.ValidationMessageFor(m => m.ScheduleDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="confirmSubmit(this.form)" type="button" class="btn btn-success btn-fw float-right">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i><span class="font-weight-bold">Create</span>
+                                </button>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-lg-6 col-12">
+                            <div class="picture-container">
+                                <div id="picture-preview" style="background-image: url('');">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- content-wrapper ends -->
-        <!-- partial:../../partials/_footer.html -->
-        <footer class="footer">
-            <div class="container-fluid clearfix">
-                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block"></span>
-                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
-                </span>
+
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <nav class="navbar navbar-expand-sm">
+                        <a class="navbar-brand" href="#">
+                            <img src="/Media/box.png" alt="Products" style="width:50px;">
+                            &nbsp; PRODUCTS
+                        </a>
+                        <ul class="nav nav-tabs" id="products-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#pending-products" role="tab" aria-controls="pending" aria-selected="true">Pending</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#ongoing-products" role="tab" aria-controls="ongoing" aria-selected="false">On Going</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#finished-products" role="tab" aria-controls="finished" aria-selected="false">Finished</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="pending-products" role="tabpanel" aria-labelledby="pending-products-tab">
+                            <table class="table table-hover table-bordered" style="width: 100% !important" id="pending-products-table">
+                                <thead>
+                                    <tr>
+                                        <th> Name </th>
+                                        <th> Link </th>
+                                        <th> Description </th>
+                                        <th> ScheduleDate </th>
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in DALProducts.GetAllPendingProducts())
+                                    {
+                                        <tr>
+                                            <td>@item.ProductName</td>
+                                            <td><a href="@item.Link">@item.Link</a></td>
+                                            <td>@item.Description</td>
+                                            <td>@item.ScheduleDate</td>
+                                            <td style="width:10%">
+                                                <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("Edit", "Products", new {id = item.Id })'" style="min-width:50px">
+                                                    <i class="mdi mdi-pencil" style="margin:0px"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-fw" onclick="deleteProduct('@item.Id')" style="min-width:50px">
+                                                    <i class="mdi mdi-delete" style="margin:0px" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-fw" onclick="startProduct('@item.Id')" style="min-width:50px">
+                                                    <i class="fa fa-play-circle m-0" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="ongoing-products" role="tabpanel" aria-labelledby="ongoing-products-tab">
+                            <table class="table table-hover table-bordered" style="width: 100% !important" id="ongoing-products-table">
+                                <thead>
+                                    <tr>
+                                        <th> No </th>
+                                        <th> Name </th>
+                                        <th> Link </th>
+                                        <th> Description </th>
+                                        <th> ScheduleDate </th>
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in DALProducts.GetAllOnGoingProducts())
+                                    {
+                                        <tr>
+                                            <td>@item.Priority</td>
+                                            <td>@item.ProductName</td>
+                                            <td><a href="@item.Link">@item.Link</a></td>
+                                            <td>@item.Description</td>
+                                            <td>@item.ScheduleDate</td>
+                                            <td style="width:10%">
+                                                <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("Edit", "Products", new {id = item.Id })'" style="min-width:50px">
+                                                    <i class="mdi mdi-pencil" style="margin:0px"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-success btn-fw" onclick="completeProduct('@item.Id')" style="min-width:50px">
+                                                    <i class="fa fa-check" style="margin: 0px" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        tempNumber += 1;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="finished-products" role="tabpanel" aria-labelledby="finished-products-tab">
+                            <table class="table table-hover table-bordered" style="width: 100% !important" id="finished-products-table">
+                                <thead>
+                                    <tr>
+                                        <th> Name </th>
+                                        <th> Link </th>
+                                        <th> Description </th>
+                                        <th> Schedule Date </th>
+                                        <th> Finish Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in DALProducts.GetAllFinishedProducts())
+                                    {
+                                        <tr>
+                                            <td>@item.ProductName</td>
+                                            <td><a href="@item.Link">@item.Link</a></td>
+                                            <td>@item.Description</td>
+                                            <td>@item.ScheduleDate</td>
+                                            <td>@item.ModifiedDate</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </footer>
-        <!-- partial -->
+        </div>
     </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-</body>
+}

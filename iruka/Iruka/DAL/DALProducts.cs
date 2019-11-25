@@ -10,12 +10,62 @@ namespace Iruka.DAL
 {
     public class DALProducts
     {
-        public static List<ProductDTO> GetAllProduct()
+        public static List<ProductDTO> GetAllPendingProducts()
         {
-            var products = Global.DB.Product.Where(x => x.IsActive == true).OrderBy(x => x.Priority).ToList();
-            var productDTOList = Mapper.Map<List<Product>, List<ProductDTO>>(products);
+            var products = Global.DB.Product
+                .Where(x => x.IsActive && x.EventStatus == EventStatus.Pending)
+                .OrderByDescending(x => x.ScheduleDate)
+                .ToList();
+            var toReturn = new List<ProductDTO>();
 
-            return productDTOList;
+            foreach (var product in products)
+            {
+                var productDto = Mapper.Map<Product, ProductDTO>(product);
+                productDto.ScheduleDate = Global.DateToString(product.ScheduleDate);
+
+                toReturn.Add(productDto);
+            }
+
+            return toReturn;
+        }
+
+        public static List<ProductDTO> GetAllOnGoingProducts()
+        {
+            var products = Global.DB.Product
+                .Where(x => x.IsActive && x.EventStatus == EventStatus.OnGoing)
+                .OrderBy(x => x.Priority)
+                .ToList();
+            var toReturn = new List<ProductDTO>();
+
+            foreach (var product in products)
+            {
+                var productDto = Mapper.Map<Product, ProductDTO>(product);
+                productDto.ScheduleDate = Global.DateToString(product.ScheduleDate);
+
+                toReturn.Add(productDto);
+            }
+
+            return toReturn;
+        }
+
+        public static List<ProductDTO> GetAllFinishedProducts()
+        {
+            var products = Global.DB.Product
+                .Where(x => x.IsActive && x.EventStatus == EventStatus.Finished)
+                .OrderByDescending(x => x.ModifiedDate)
+                .ToList();
+            var toReturn = new List<ProductDTO>();
+
+            foreach (var product in products)
+            {
+                var productDto = Mapper.Map<Product, ProductDTO>(product);
+                productDto.ScheduleDate = Global.DateToString(product.ScheduleDate);
+                productDto.ModifiedDate = Global.DateToString(product.ModifiedDate);
+
+                toReturn.Add(productDto);
+            }
+
+            return toReturn;
         }
     }
 }

@@ -114,6 +114,10 @@
     <Compile Include="Migrations\201911241851108_EventPriorityToNullable.Designer.cs">
       <DependentUpon>201911241851108_EventPriorityToNullable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911251710348_ProductModelUpdated.cs" />
+    <Compile Include="Migrations\201911251710348_ProductModelUpdated.Designer.cs">
+      <DependentUpon>201911251710348_ProductModelUpdated.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\Coupon.cs" />
@@ -168,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911241851108_EventPriorityToNullable.resx">
       <DependentUpon>201911241851108_EventPriorityToNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911251710348_ProductModelUpdated.resx">
+      <DependentUpon>201911251710348_ProductModelUpdated.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

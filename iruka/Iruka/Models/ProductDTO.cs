@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Iruka.Models
 {
-    public class ProductDTO
+    public class ProductDTO : BaseEntityDto
     {
         public Guid Id { get; set; }
 
@@ -29,6 +29,6 @@ namespace Iruka.Models
         [Display(Name = "Schedule Date")]
         public string ScheduleDate { get; set; }
         public int Priority { get; set; }
-
+        public string Base64URL { get; set; }
     }
 }

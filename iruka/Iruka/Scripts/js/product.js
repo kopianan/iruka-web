@@ -1,34 +1,49 @@
-﻿var PictureUrl = "";
-var CertificateUrl = "";
-var userID = "";
+﻿let pictureDataUrl = "";
+let pictureName = "";
+let pictureExtension = "";
 
-// #region UPLOAD
-$("#pictureUploader").kendoUpload({
-    multiple: false,
-    localization: {
-        select: 'Choose Picture'
-    },
-    async: {
-        saveUrl: "/Products/SavePicture",
-        autoUpload: true
-    },
-    success: onSuccess,
-    remove: onRemove,
-    validation: {
-        allowedExtensions: [".jpeg", ".jpg", ".png"],
-        maxFileSize: 30194304
+function readPictureURL(input) {
+    if (input.files && input.files[0]) {
+        if (input.files[0].size > 30194304) {
+            toastr.error('3mb is maximum accepted file size!');
+            input.value = "";
+        } else {
+            let acceptableFileTypes = ['jpg', 'jpeg', 'png'];
+            let reader = new FileReader();
+            let extension = input.files[0].name.split('.').pop().toLowerCase(),
+                isSuccess = acceptableFileTypes.indexOf(extension) > -1;
+
+            if (extension == "jpg") {
+                extension = "jpeg";
+            }
+
+            if (isSuccess) {
+                reader.fileName = input.files[0].name;
+                reader.onload = function (e) {
+                    $('#picture-preview').css('background-image', 'url(' + e.target.result + ')');
+                    $('#picture-preview').hide();
+                    $('#picture-preview').fadeIn(650);
+
+                    pictureDataUrl = e.target.result;
+                    pictureName = e.target.fileName;
+                    pictureExtension = extension;
+
+                    $('#Base64URL').val(pictureDataUrl.replace("data:image/" + pictureExtension + ";base64,", ""));
+                    $('#PicturePath').val(pictureName);
+                    $('.picture-container').removeClass('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                toastr.error(`Can't read file name!`)
+            }
+        }
     }
+}
+
+$("#picture-upload").change(function () {
+    readPictureURL(this);
 });
-function onSuccess(e) {
-    PictureUrl = e.response.success;
-    $("#PicturePath").val(PictureUrl);
-}
-function onRemove(e) {
-    var PictA = $("#pictureUploader").data().kendoUpload;
-    var RemovingPictA = PictA.wrapper.find('.k-file');
-    PictA._removeFileEntry(RemovingPictA);
-}
-// #endregion
 
 $('#ScheduleDate').datetimepicker({
     weekStart: 1,
@@ -41,9 +56,45 @@ $('#ScheduleDate').datetimepicker({
     startDate: new Date()
 });
 
-$('#gridTable').on('row-reorder.dt', function (dragEvent, data, nodes) {
+function InitOnGoingProductsDataTable() {
+
+    onGoingDataTable = $('#ongoing-products-table').DataTable({
+        responsive: true,
+        "pageLength": 10,
+        rowReorder: true,
+        columnDefs: [
+            { orderable: false, className: 'reorder', targets: 0 },
+            { orderable: false, targets: '_all' }
+        ],
+        "order": [],
+        "bLengthChange": false,
+        "bInfo": false
+    });
+}
+
+function InitPendingProductsDataTable() {
+    pendingDataTable = $('#pending-products-table').DataTable({
+        responsive: true,
+        "pageLength": 10,
+        "order": [],
+        "bLengthChange": false,
+        "bInfo": false
+    });
+}
+
+function InitFinishedProductsDataTable() {
+    finishedDataTable = $('#finished-products-table').DataTable({
+        responsive: true,
+        "pageLength": 10,
+        "order": [],
+        "bLengthChange": false,
+        "bInfo": false
+    });
+}
+
+$('#ongoing-products-table').on('row-reorder.dt', function (dragEvent, data, nodes) {
     for (var i = 0, ien = data.length; i < ien; i++) {
-        var rowData = datatable.row(data[i].node).data();
+        var rowData = onGoingDataTable.row(data[i].node).data();
         $.ajax({
             type: "GET",
             cache: false,
@@ -55,108 +106,154 @@ $('#gridTable').on('row-reorder.dt', function (dragEvent, data, nodes) {
     }
 });
 
-function InitDataTable() {
-
-    datatable = $('#gridTable').DataTable({
-        //columnDefs: [{
-        //    orderable: false,
-        //    className: 'select-checkbox',
-        //    targets: 0,
-        //    checkboxes: {
-        //        'selectRow': true
-        //    }
-        //}],
-        //"pageLength": 10,
-        //"scrollX": true,
-        //"language": {
-        //    "paginate": {
-        //        "previous": "<<",
-        //        "next": ">>"
-        //    }
-        //},
-        rowReorder: true,
-        columnDefs: [
-            { orderable: true, className: 'reorder', targets: 0 },
-            { orderable: false, targets: '_all' }
-        ],
-        //select: true,
-        //paging: true,
-        "order": [[0, "asc"]],
-        //"info": false,
-        //"bPaginate": false,
-        "bLengthChange": false,
-        //"bFilter": true,
-        "bInfo": false
-        //"bAutoWidth": false,
-        //dom: 'Bfrtip'
+function deleteProduct(id) {
+    $.confirm({
+        title: 'Delete product ?',
+        content: `You won't be able to revert this!`,
+        buttons: {
+            yes: {
+                text: 'Yes!',
+                btnClass: 'btn-red',
+                action: function () {
+                    $.ajax({
+                        async: false,
+                        url: "/Products/DeleteProduct",
+                        data: "{ 'id': '" + id + "' }",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataFilter: function (data) { return data; },
+                        success: function (data) {
+                            if (data["success"] != undefined) {
+                                $.alert('Deleted successfully!');
+                                location.reload(true);
+                            } else {
+                                $.alert({
+                                    title: 'Encountered an error!',
+                                    content: `Can't delete product, please contact support!`,
+                                    text: 'Cancelled!',
+                                    type: 'orange',
+                                    typeAnimated: true
+                                });
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            //alert(errorThrown);
+                        }
+                    });
+                }
+            },
+            cancel: {
+                text: 'Cancel!',
+                btnClass: 'btn-green',
+                keys: ['enter'],
+                action: function () {
+                    $.alert('Cancelled!');
+                }
+            }
+        }
     });
 }
 
-$("#btnSubmitProduct").click(function () {
-    var pictureName = PictureUrl.split('\\');
-    $.ajax({
-        async: false,
-        url: "/Products/InsertProduct",
-        data: "{ 'name': '" + $("#Name").val() + "','email': '" + $("#Email").val() + "','password': '" +
-            $("#Password").val() + "','phone': '" + $("#PhoneNumber").val() + "','address': '" +
-            $("#Address").val() + "','picture': '" + pictureName[6] + "','desc': '" + $("#Description").val() + "','role': '" + "ContentManager" + "' }",
-        dataType: "json",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataFilter: function (data) { return data; },
-        success: function (data) {
-            if (data["success"] != undefined) {
-                clearInput();
-                Swal.fire('Success created user');
-                reloadContentManagerTable();
+function startProduct(id) {
+    $.confirm({
+        title: 'Start Product Manually ?',
+        buttons: {
+            yes: {
+                text: 'Yes!',
+                btnClass: 'btn-red',
+                action: function () {
+                    $.ajax({
+                        async: false,
+                        url: "/Products/StartProduct",
+                        data: "{ 'id': '" + id + "' }",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataFilter: function (data) { return data; },
+                        success: function (data) {
+                            if (data["success"] != undefined) {
+                                $.alert('Action completed successfully!');
+                                location.reload(true);
+                            } else {
+                                $.alert({
+                                    title: 'Encountered an error!',
+                                    content: `Can't do action, please contact support!`,
+                                    text: 'Cancelled!',
+                                    type: 'orange',
+                                    typeAnimated: true
+                                });
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            //alert(errorThrown);
+                        }
+                    });
+                }
+            },
+            cancel: {
+                text: 'Cancel!',
+                btnClass: 'btn-green',
+                keys: ['enter'],
+                action: function () {
+                    $.alert('Cancelled!');
+                }
             }
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert(errorThrown);
         }
     });
-});
+}
 
-function deleteProduct(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                async: false,
-                url: "/Products/DeleteProduct",
-                data: "{ 'id': '" + id + "' }",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataFilter: function(data) { return data; },
-                success: function(data) {
-                    if (data["success"] != undefined) {
-                        location.reload(true);
-
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        );
-                    } else {
-                        Swal.fire('Delete User error, please contact support');
-                    }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    //alert(errorThrown);
+function completeProduct(id) {
+    $.confirm({
+        title: 'Complete product ?',
+        content: `You won't be able to revert this!`,
+        buttons: {
+            yes: {
+                text: 'Yes!',
+                btnClass: 'btn-red',
+                action: function () {
+                    $.ajax({
+                        async: false,
+                        url: "/Products/CompleteProduct",
+                        data: "{ 'id': '" + id + "' }",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataFilter: function (data) { return data; },
+                        success: function (data) {
+                            if (data["success"] != undefined) {
+                                $.alert('Action completed successfully!');
+                                location.reload(true);
+                            } else {
+                                $.alert({
+                                    title: 'Encountered an error!',
+                                    content: `Can't do action, please contact support!`,
+                                    text: 'Cancelled!',
+                                    type: 'orange',
+                                    typeAnimated: true
+                                });
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            //alert(errorThrown);
+                        }
+                    });
                 }
-            });
+            },
+            cancel: {
+                text: 'Cancel!',
+                btnClass: 'btn-green',
+                keys: ['enter'],
+                action: function () {
+                    $.alert('Cancelled!');
+                }
+            }
         }
     });
 }
 
 $(document).ready(function () {
-    InitDataTable();
+    InitOnGoingProductsDataTable();
+    InitPendingProductsDataTable();
+    InitFinishedProductsDataTable();
 });

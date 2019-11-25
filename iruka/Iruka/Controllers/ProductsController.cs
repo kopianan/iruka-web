@@ -9,6 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using Iruka.DAL;
 using Iruka.EF.Model;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
@@ -19,42 +20,25 @@ namespace Iruka.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Products
         public ActionResult Index()
         {
             ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
-        // GET: Products/Create
-        public ActionResult Create()
-        {
-            ViewBag.UserId = User.Identity.GetUserId(); return View();
-        }
-
-        // POST: Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(ProductDTO productDto)
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(ProductDTO productDto)
         {
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
                 var product = Mapper.Map<ProductDTO, Product>(productDto);
-                var getProduct = db.Product.OrderByDescending(item => item.Priority).FirstOrDefault();
-                product.Picture = "/Media/Product/" + product.Picture;
-
-                if (getProduct==null)
-                {
-                    product.Priority = 1;
-                }
-                else
-                {
-                    product.Priority = getProduct.Priority + 1;
-                }
+                product.Picture = string.IsNullOrWhiteSpace(productDto.Picture) ? null : "/Media/Product/" + productDto.Picture;
                 product.NewCreatedData(userId);
 
                 db.Product.Add(product);
+                var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Product");
+                Global.SaveBase64DataUrlFile(productDto.Base64URL, productDto.Picture, savePath);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -62,7 +46,6 @@ namespace Iruka.Controllers
             ViewBag.UserId = User.Identity.GetUserId(); return View(productDto);
         }
 
-        // GET: Products/Edit/5
         public ActionResult Edit(Guid id)
         {
             if (id == null)
@@ -76,49 +59,78 @@ namespace Iruka.Controllers
             }
             var productDTO = Mapper.Map<Product, ProductDTO>(product);
             productDTO.ScheduleDate = product.ScheduleDate.ToString("dd MMMM yyyy");
-            return View(productDTO);
+
+            ViewBag.UserId = User.Identity.GetUserId(); return View(productDTO);
         }
 
-        // POST: Tests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id,ProductName,Description,Link,Picture,ScheduleDate,CreatedDate")] ProductDTO product)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ProductDTO productDTO)
         {
             if (ModelState.IsValid)
             {
-                Product productEdited = db.Product.Find(product.Id);
-                var getPicture = product.Picture.Split('\\');
-                productEdited.Picture = getPicture[getPicture.Length - 1];
-                productEdited.Picture = "/Media/Product/" + productEdited.Picture;
-                productEdited.ProductName = product.ProductName;
-                productEdited.Description = product.Description;
-                productEdited.Link = product.Link;
-                //productEdited.ScheduleDate = product.ScheduleDate;
+                Product product = db.Product.Find(productDTO.Id);
+                product.ProductName = productDTO.ProductName;
+                product.Description = productDTO.Description;
+                product.Link = productDTO.Link;
+                product.ScheduleDate = DateTime.Parse(productDTO.ScheduleDate);
+                product.SetModifiedData(User.Identity.GetUserId());
+
+                if (product.Picture != productDTO.Picture)
+                {
+                    product.Picture = string.IsNullOrWhiteSpace(productDTO.Picture) ? "" : "/Media/Product/" + productDTO.Picture;
+                    var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Product");
+                    Global.SaveBase64DataUrlFile(productDTO.Base64URL, productDTO.Picture, savePath);
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = User.Identity.GetUserId(); return View(product);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(productDTO);
         }
 
-        public void UpdateRow( int fromPosition, int toPosition)
-        {
-            using (var ctx = new ApplicationDbContext())
-            {
-                var productList = ctx.Product.ToList();
-                ctx.Product.First(c => c.Priority == fromPosition).Priority = toPosition;
-                ctx.Product.First(c => c.Priority == toPosition).Priority = fromPosition;
-                ctx.SaveChanges();
-            }
-        }
-
-        #region DELETE
-        public ActionResult DeleteProduct(Guid id)
+        public ActionResult StartProduct(Guid id)
         {
             try
             {
                 Product product = db.Product.Find(id);
-                db.Product.Remove(product);
+                product.EventStatus = EventStatus.OnGoing;
+                var lastPriorityOnGoingProduct = db.Product.Where(x => x.Priority != null).OrderByDescending(item => item.Priority).FirstOrDefault();
+
+                if (lastPriorityOnGoingProduct == null)
+                {
+                    product.Priority = 1;
+                }
+                else
+                {
+                    product.Priority = lastPriorityOnGoingProduct.Priority + 1;
+                }
+
+                product.SetModifiedData(User.Identity.GetUserId());
+                db.SaveChanges();
+                return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult CompleteProduct(Guid id)
+        {
+            try
+            {
+                Product product = db.Product.Find(id);
+                product.EventStatus = EventStatus.Finished;
+
+                var onGoingProducts = db.Product.Where(x => x.Priority != null).OrderBy(item => item.Priority).ToList();
+                for (int i = (int)product.Priority + 1; i <= onGoingProducts.Count(); i++)
+                {
+                    onGoingProducts.SingleOrDefault(x => x.Priority == i).Priority -= 1;
+                }
+                product.Priority = null;
+
+                product.SetModifiedData(User.Identity.GetUserId());
                 db.SaveChanges();
                 return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
             }
@@ -128,99 +140,32 @@ namespace Iruka.Controllers
             }
 
         }
-        #endregion
 
-        #region Upload
-        [HttpPost]
-        public ActionResult SavePicture(IEnumerable<HttpPostedFileBase> files)
+        public ActionResult DeleteProduct(Guid id)
         {
-            if (files == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                Product product = db.Product.Find(id);
+                product.SetIsActive(false, User.Identity.GetUserId());
+                db.SaveChanges();
+                return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
             }
-            var path = Save(files);
-            return Json(new { success = path }, JsonRequestBehavior.AllowGet);
-        }
-        public static string Save(IEnumerable<HttpPostedFileBase> files)
-        {
-            var tempPhysicalPath = "";
-            var fullPath = "";
-            foreach (var file in files)
+            catch (Exception)
             {
-
-                var fileName = Path.GetFileName(file.FileName);
-                var filePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Product");
-                var physicalPath = Path.Combine(filePath, fileName);
-                file.SaveAs(physicalPath);
-                tempPhysicalPath = fileName;
-                fullPath = physicalPath;
+                return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
             }
 
-            Image image = ResizeImage(fullPath);
-            if (System.IO.File.Exists(fullPath))
-            {
-                System.IO.File.Delete(fullPath);
-                image.Save(fullPath);
-            }
-
-            return tempPhysicalPath;
         }
 
-        public ActionResult RemovePicture(string[] fileNames)
+        public void UpdateRow(int fromPosition, int toPosition)
         {
-            RemovePicture(fileNames);
-            return Json(new { error = "Insert Error : Inserted data not valid" }, JsonRequestBehavior.AllowGet);
+            using (var ctx = new ApplicationDbContext())
+            {
+                var productList = ctx.Product.ToList();
+                ctx.Product.First(c => c.Priority == fromPosition).Priority = toPosition;
+                ctx.Product.First(c => c.Priority == toPosition).Priority = fromPosition;
+                ctx.SaveChanges();
+            }
         }
-
-        public static Image ResizeImage(string pathName)
-        {
-
-            Bitmap original, resizedImage;
-
-
-            using (FileStream fs = new System.IO.FileStream(pathName, System.IO.FileMode.Open))
-            {
-                original = new Bitmap(fs);
-            }
-
-            int rectHeight = 200;
-            int rectWidth = 200;
-
-            //if the image is squared set it's height and width to the smallest of the desired dimensions (our box). In the current example rectHeight<rectWidth
-            if (original.Height == original.Width)
-            {
-                resizedImage = new Bitmap(original, rectHeight, rectHeight);
-            }
-            else
-            {
-                //calculate aspect ratio
-                float aspect = original.Width / (float)original.Height;
-                int newWidth, newHeight;
-
-                //calculate new dimensions based on aspect ratio
-                newWidth = (int)(rectWidth * aspect);
-                newHeight = (int)(newWidth / aspect);
-
-                //if one of the two dimensions exceed the box dimensions
-                if (newWidth > rectWidth || newHeight > rectHeight)
-                {
-                    //depending on which of the two exceeds the box dimensions set it as the box dimension and calculate the other one based on the aspect ratio
-                    if (newWidth > newHeight)
-                    {
-                        newWidth = rectWidth;
-                        newHeight = (int)(newWidth / aspect);
-                    }
-                    else
-                    {
-                        newHeight = rectHeight;
-                        newWidth = (int)(newHeight * aspect);
-                    }
-                }
-                resizedImage = new Bitmap(original, newWidth, newHeight);
-            }
-            return resizedImage;
-
-        }
-        #endregion
     }
 }

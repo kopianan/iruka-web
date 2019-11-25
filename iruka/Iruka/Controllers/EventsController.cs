@@ -33,7 +33,6 @@ namespace Iruka.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 var @event = Mapper.Map<EventDTO, Event>(eventDto);
-                var lastPriorityEvent = db.Event.OrderByDescending(item => item.Priority).FirstOrDefault();
                 @event.Picture = string.IsNullOrWhiteSpace(eventDto.Picture) ? null : "/Media/Event/" + eventDto.Picture;
                 @event.NewCreatedData(userId);
 
@@ -65,6 +64,7 @@ namespace Iruka.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(EventDTO eventDTO)
         {
             if (ModelState.IsValid)
@@ -113,7 +113,6 @@ namespace Iruka.Controllers
             {
                 return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
             }
-
         }
 
         public ActionResult CompleteEvent(Guid id)
@@ -122,7 +121,14 @@ namespace Iruka.Controllers
             {
                 Event @event = db.Event.Find(id);
                 @event.EventStatus = EventStatus.Finished;
+
+                var onGoingEvents = db.Event.Where(x => x.Priority != null).OrderBy(item => item.Priority).ToList();
+                for (int i = (int)@event.Priority + 1; i <= onGoingEvents.Count(); i++)
+                {
+                    onGoingEvents.SingleOrDefault(x => x.Priority == i).Priority -= 1;
+                }
                 @event.Priority = null;
+
                 @event.SetModifiedData(User.Identity.GetUserId());
                 db.SaveChanges();
                 return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
@@ -134,7 +140,6 @@ namespace Iruka.Controllers
 
         }
 
-        #region DELETE
         public ActionResult DeleteEvent(Guid id)
         {
             try
@@ -150,7 +155,6 @@ namespace Iruka.Controllers
             }
 
         }
-        #endregion
 
         [HttpPost]
         public ActionResult UpdateRow(UpdateRowRequest request)
@@ -158,18 +162,30 @@ namespace Iruka.Controllers
             var eventSequence = new List<Event>();
             var newPrioritySequence = new List<RowData>();
 
-            foreach (var row in request.RowData)
+            foreach (var row in request.ListRowData)
             {
                 eventSequence.Add(db.Event.Single(x => x.Priority == row.oldData));
                 newPrioritySequence.Add(new RowData() { oldData = row.oldData, newData = row.newData });
             }
 
-            foreach (var @event in eventSequence)
+            for (int i = 0; i <= eventSequence.Count(); i++)
             {
-                @event.Priority = newPrioritySequence.Single(x => x.oldData == @event.Priority).newData;
+                var newRow = newPrioritySequence.Single(x => x.oldData == eventSequence[i].Priority).newData;
+                eventSequence[i].Priority = newRow;
             }
 
             return Json(new { }, JsonRequestBehavior.AllowGet);
+        }
+
+        public class UpdateRowRequest
+        {
+            public List<RowData> ListRowData { get; set; }
+        }
+
+        public class RowData
+        {
+            public int oldData { get; set; }
+            public int newData { get; set; }
         }
 
         #region Upload
@@ -262,16 +278,5 @@ namespace Iruka.Controllers
 
         }
         #endregion
-
-        public class UpdateRowRequest
-        {
-            public List<RowData> RowData { get; set; }
-        }
-
-        public class RowData
-        {
-            public int oldData { get; set; }
-            public int newData { get; set; }
-        }
     }
 }

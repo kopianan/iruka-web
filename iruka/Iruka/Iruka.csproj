@@ -381,9 +381,9 @@
     <Content Include="login-css\lumcore\js\respond.min.js" />
     <Content Include="Media\avatar-placeholder.png" />
     <Content Include="Media\bag.png" />
+    <Content Include="Media\calendar.png" />
     <Content Include="Media\cutting.png" />
     <Content Include="Media\delivery-package.png" />
-    <Content Include="Media\edit.png" />
     <Content Include="Media\product.png" />
     <Content Include="Media\ProfileTemp1.jpg" />
     <Content Include="Media\service-dog.png" />
@@ -5301,12 +5301,9 @@
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="template\src\assets\vendors\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Views\Partial\Partial_InternalUsersTable.cshtml" />
-    <Content Include="Views\Products\Create.cshtml" />
-    <Content Include="Views\Products\Delete.cshtml" />
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
-    <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
