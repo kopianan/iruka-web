@@ -11,7 +11,7 @@ namespace Iruka.Models
         public Guid Id { get; set; }
 
         [Required]
-        [Display(Name = "Product Name")]
+        [Display(Name = "Title")]
         public string ProductName { get; set; }
 
         [Required]

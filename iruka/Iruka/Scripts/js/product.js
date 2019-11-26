@@ -66,7 +66,7 @@ function InitOnGoingProductsDataTable() {
             { orderable: false, className: 'reorder', targets: 0 },
             { orderable: false, targets: '_all' }
         ],
-        "order": [],
+        "order": [[0, "asc"]],
         "bLengthChange": false,
         "bInfo": false
     });
@@ -93,17 +93,37 @@ function InitFinishedProductsDataTable() {
 }
 
 $('#ongoing-products-table').on('row-reorder.dt', function (dragEvent, data, nodes) {
-    for (var i = 0, ien = data.length; i < ien; i++) {
-        var rowData = onGoingDataTable.row(data[i].node).data();
-        $.ajax({
-            type: "GET",
-            cache: false,
-            contentType: "application/json; charset=utf-8",
-            url: '/Products/UpdateRow',
-            data: {fromPosition: data[i].oldData, toPosition: data[i].newData },
-            dataType: "json"
-        });
-    }
+
+    let rowArray = [];
+
+    $.each(data, function (i, v) {
+        let rowObject = {
+            OldData: v.oldData,
+            NewData: v.newData,
+        };
+
+        rowArray.push(rowObject);
+    });
+
+    let obj = {
+        UserId: userId,
+        RowArray: JSON.stringify(rowArray)
+    };
+
+    $.ajax({
+        url: "/API/Product/UpdateRow",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(obj),
+        error: function () {
+            toastr.error("There has been an error! Try refreshing the page.");
+        },
+        success: function () {
+            toastr.success("Priority updated!");
+        },
+        async: false
+    });
+
 });
 
 function deleteProduct(id) {

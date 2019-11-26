@@ -189,6 +189,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\EventController.cs" />
+    <Compile Include="Controllers\API\ProductController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\MobileAPIController.cs" />

@@ -66,7 +66,7 @@ function InitOnGoingEventsDataTable() {
             { orderable: false, className: 'reorder', targets: 0 },
             { orderable: false, targets: '_all' }
         ],
-        "order": [],
+        "order": [[0, "asc"]],
         "bLengthChange": false,
         "bInfo": false
     });
@@ -94,20 +94,35 @@ function InitFinishedEventsDataTable() {
 
 $('#ongoing-events-table').on('row-reorder.dt', function (dragEvent, data, nodes) {
 
-    console.log(data);
-    //$.ajax({
-    //    url: "/Events/UpdateRow",
-    //    method: "POST",
-    //    contentType: "application/json",
-    //    data: JSON.stringify(data),
-    //    error: function () {
-    //        toastr.error("There has been an error! Try refreshing the page.");
-    //    },
-    //    success: function () {
+    let rowArray = [];
 
-    //    },
-    //    async: false
-    //});
+    $.each(data, function (i, v) {
+        let rowObject = {
+            OldData: v.oldData,
+            NewData: v.newData,
+        };
+
+        rowArray.push(rowObject);
+    });
+
+    let obj = {
+        UserId: userId,
+        RowArray: JSON.stringify(rowArray)
+    };
+
+    $.ajax({
+        url: "/API/Event/UpdateRow",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(obj),
+        error: function () {
+            toastr.error("There has been an error! Try refreshing the page.");
+        },
+        success: function () {
+            toastr.success("Priority updated!");
+        },
+        async: false
+    });
 
 });
 

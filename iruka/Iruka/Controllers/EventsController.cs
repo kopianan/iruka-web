@@ -156,38 +156,6 @@ namespace Iruka.Controllers
 
         }
 
-        [HttpPost]
-        public ActionResult UpdateRow(UpdateRowRequest request)
-        {
-            var eventSequence = new List<Event>();
-            var newPrioritySequence = new List<RowData>();
-
-            foreach (var row in request.ListRowData)
-            {
-                eventSequence.Add(db.Event.Single(x => x.Priority == row.oldData));
-                newPrioritySequence.Add(new RowData() { oldData = row.oldData, newData = row.newData });
-            }
-
-            for (int i = 0; i <= eventSequence.Count(); i++)
-            {
-                var newRow = newPrioritySequence.Single(x => x.oldData == eventSequence[i].Priority).newData;
-                eventSequence[i].Priority = newRow;
-            }
-
-            return Json(new { }, JsonRequestBehavior.AllowGet);
-        }
-
-        public class UpdateRowRequest
-        {
-            public List<RowData> ListRowData { get; set; }
-        }
-
-        public class RowData
-        {
-            public int oldData { get; set; }
-            public int newData { get; set; }
-        }
-
         #region Upload
         [HttpPost]
         public ActionResult SavePicture(IEnumerable<HttpPostedFileBase> files)
