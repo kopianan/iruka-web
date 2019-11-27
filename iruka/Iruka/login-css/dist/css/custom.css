@@ -57,7 +57,7 @@ table td { padding:1px!important; }
 .login-page,
 .register-page {
     /* The image used */
-    background: url('/login-css/dist/img/login-background.jpg') no-repeat center center fixed;
+    background: url('/Media/login-background-min.jpg') no-repeat center center fixed;
     /*
     background: url('/dist/img/Plaza-MAREIN.jpg') no-repeat center center fixed; 
     -webkit-background-size: cover;
