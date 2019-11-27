@@ -338,8 +338,6 @@
     <Content Include="login-css\dist\img\googlemap\1.png" />
     <Content Include="login-css\dist\img\green1.png" />
     <Content Include="login-css\dist\img\icon_1chat.png" />
-    <Content Include="login-css\dist\img\iloveiruka logo main GS.png" />
-    <Content Include="login-css\dist\img\iloveiruka logo.png" />
     <Content Include="login-css\dist\img\loading.gif" />
     <Content Include="login-css\dist\img\login_background.jpg" />
     <Content Include="login-css\dist\img\logo-login.png" />
@@ -5108,8 +5106,6 @@
     <Content Include="template\.gitignore" />
     <Content Include="template\.vscode\settings.json" />
     <Content Include="template\CHANGELOG.md" />
-    <Content Include="template\design files\PSD\StarAdmin-Free-Bootstrap-Admin-Template.psd" />
-    <Content Include="template\design files\Sketch\StarAdmin-Free-Bootstrap-Admin-Template.sketch" />
     <Content Include="template\LICENSE" />
     <Content Include="template\package.json" />
     <Content Include="template\README.md" />
@@ -5332,6 +5328,8 @@
     <Folder Include="Media\Event\" />
     <Folder Include="Media\Product\" />
     <Folder Include="Media\UserPicture\" />
+    <Folder Include="template\design files\PSD\" />
+    <Folder Include="template\design files\Sketch\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

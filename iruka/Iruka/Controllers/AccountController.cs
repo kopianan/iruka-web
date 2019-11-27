@@ -65,7 +65,7 @@ namespace Iruka.Controllers
                         var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
                         Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
                     }
-                    await SignInManager.SignInAsync(newUser, isPersistent: false, rememberBrowser: false);
+                    //await SignInManager.SignInAsync(newUser, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -139,7 +139,7 @@ namespace Iruka.Controllers
                             Global.SaveBase64DataUrlFile(userDTO.Base64URLCertificate, userDTO.Certificate, savePath);
                         }
                     }
-                    await SignInManager.SignInAsync(newUser, isPersistent: false, rememberBrowser: false);
+                    //await SignInManager.SignInAsync(newUser, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -192,7 +192,7 @@ namespace Iruka.Controllers
             var userDTO = Mapper.Map<ApplicationUser, UserDTO>(user);
             userDTO.InternalRoleEnum = DALUsers.GetInternalUserRoleEnum(userDTO.Id);
 
-            return View(userDTO);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(userDTO);
         }
 
         [HttpPost]
@@ -247,7 +247,7 @@ namespace Iruka.Controllers
             var userDTO = Mapper.Map<ApplicationUser, UserDTO>(user);
             userDTO.EndClientEnum = DALUsers.GetEndUserRoleEnum(userDTO.Id);
 
-            return View(userDTO);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(userDTO);
         }
 
         [HttpPost]
