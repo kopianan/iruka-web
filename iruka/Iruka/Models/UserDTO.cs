@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.Models
 {
@@ -48,33 +49,5 @@ namespace Iruka.Models
         public string Certificate { get; set; }
         public string Role { get; set; }
         public string Base64URLCertificate { get; set; }
-    }
-
-    public enum InternalRoleEnum
-    {
-        Admin,
-        Finance,
-        [Display(Name = "Content Manager")]
-        ContentManager,
-    }
-
-    public enum EndClientEnum
-    {
-        Groomer,
-        Owner,
-        Customer
-    }
-
-    public enum UserRoleEnum
-    {
-        None,
-        SuperAdmin,
-        Admin,
-        Finance,
-        [Display(Name = "Content Manager")]
-        ContentManager,
-        Groomer,
-        Owner,
-        Customer
     }
 }

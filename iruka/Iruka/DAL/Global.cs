@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.DAL
 {

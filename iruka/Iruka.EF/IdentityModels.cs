@@ -16,12 +16,12 @@ namespace Iruka.Models
         public string Description { get; set; }
         public string Address { get; set; }
         public string Picture { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public ApplicationUser()
         {
-            isActive = true;
+            IsActive = true;
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -35,6 +35,7 @@ namespace Iruka.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public IDbSet<Branch> Branches { get; set; }
         public IDbSet<Product> Product { get; set; }
         public IDbSet<Event> Event { get; set; }
         public IDbSet<IdentityUserRole> UserRoles { get; set; }

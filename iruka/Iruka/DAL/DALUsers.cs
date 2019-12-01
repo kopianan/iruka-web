@@ -5,6 +5,7 @@ using System.Web;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.DAL
 {
@@ -12,7 +13,7 @@ namespace Iruka.DAL
     {
         public static List<UserDTO> GetAllUserBaseOnRole(List<string> roles)
         {
-            var activeUsers = Global.DB.Users.Where(x => x.isActive).OrderByDescending(x => x.CreatedDate).ToList();
+            var activeUsers = Global.DB.Users.Where(x => x.IsActive).OrderByDescending(x => x.CreatedDate).ToList();
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
             List<UserDTO> toReturn = new List<UserDTO>();

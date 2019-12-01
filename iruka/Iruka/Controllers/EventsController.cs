@@ -13,6 +13,7 @@ using Iruka.DAL;
 using Iruka.EF.Model;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.Controllers
 {

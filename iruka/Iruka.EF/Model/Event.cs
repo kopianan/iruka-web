@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.EF.Model
 {
@@ -15,12 +16,5 @@ namespace Iruka.EF.Model
         public int? Priority { get; set; }
         public DateTime ScheduleDate { get; set; }
         public EventStatus EventStatus { get; set; }
-    }
-
-    public enum EventStatus
-    {
-        Pending,
-        OnGoing,
-        Finished
     }
 }

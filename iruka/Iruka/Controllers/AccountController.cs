@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Net;
 using AutoMapper;
 using System.Data.Entity;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.Controllers
 {
@@ -307,7 +308,7 @@ namespace Iruka.Controllers
             try
             {
                 ApplicationUser targetUser = db.Users.Find(id);
-                targetUser.isActive = false;
+                targetUser.IsActive = false;
                 db.Entry(targetUser).State = EntityState.Modified;
                 db.SaveChanges();
                 return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
@@ -383,7 +384,7 @@ namespace Iruka.Controllers
                 case SignInStatus.Success:
                     var targetUser = db.Users.SingleOrDefault(x => x.Email == model.Email);
 
-                    if (targetUser.isActive)
+                    if (targetUser.IsActive)
                     {
                         return RedirectToLocal(returnUrl);
                     }

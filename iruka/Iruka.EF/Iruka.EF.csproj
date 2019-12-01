@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.2.0\lib\net45\AutoMapper.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -118,9 +115,19 @@
     <Compile Include="Migrations\201911251710348_ProductModelUpdated.Designer.cs">
       <DependentUpon>201911251710348_ProductModelUpdated.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912011411177_CouponModelRevamp.cs" />
+    <Compile Include="Migrations\201912011411177_CouponModelRevamp.Designer.cs">
+      <DependentUpon>201912011411177_CouponModelRevamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912011420215_AddedBranchEntity.cs" />
+    <Compile Include="Migrations\201912011420215_AddedBranchEntity.Designer.cs">
+      <DependentUpon>201912011420215_AddedBranchEntity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
+    <Compile Include="Model\Branch.cs" />
     <Compile Include="Model\Coupon.cs" />
+    <Compile Include="Model\Enum.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\Transaction.cs" />
@@ -175,6 +182,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911251710348_ProductModelUpdated.resx">
       <DependentUpon>201911251710348_ProductModelUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912011411177_CouponModelRevamp.resx">
+      <DependentUpon>201912011411177_CouponModelRevamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912011420215_AddedBranchEntity.resx">
+      <DependentUpon>201912011420215_AddedBranchEntity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
