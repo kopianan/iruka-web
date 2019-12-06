@@ -1,51 +1,153 @@
-﻿@model IEnumerable<Iruka.EF.Model.Coupon>
+﻿@using Iruka.DAL
+@model Iruka.Models.CouponDto
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@section js {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/js/cleave.min.js"></script>
+    <script src="~/Scripts/js/coupon.js"></script>
+    <script>
+        $(function () {
+            InitActiveCouponsDataTable();
+        });
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ServiceType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MaxPoint)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bonus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ServiceType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MaxPoint)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Bonus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+        function InitActiveCouponsDataTable() {
+            couponDataTable = $('#active-coupons-table').DataTable({
+                responsive: true,
+                "pageLength": 10,
+                "order": [],
+                "bLengthChange": false,
+                "bInfo": false
+            });
+        }
+    </script>
 }
 
-</table>
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Create New Coupon</h2>
+                    <hr />
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <fieldset>
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.CouponType, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.EnumDropDownListFor(m => m.CouponType, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CouponType, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.PointPrice, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.PointPrice, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.PointPrice, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    @Html.LabelFor(m => m.Amount, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div id="discount-section" class="form-group row d-none">
+                                    @Html.LabelFor(model => model.DiscountValue, htmlAttributes: new { @class = "control-label col-12" })
+                                    <div class="col-12" style="display: flex; align-content: center">
+                                        @Html.EnumDropDownListFor(model => model.DiscountType, htmlAttributes: new { @class = "form-control", @style = "width: 80px; background-color: #5aa0b3; color: white" })
+                                        @Html.EditorFor(model => model.DiscountValue, new { htmlAttributes = new { @class = "form-control numeral" } })
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.DiscountValue, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div id="product-section" class="form-group row d-none">
+                                    @Html.LabelFor(m => m.FreeProduct, new { @class = "col-12 control-label" })
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.FreeProduct, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.FreeProduct, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <button type="button" onclick="confirmSubmit(this.form)" class="btn btn-success btn-fw float-right">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i><span class="font-weight-bold">Create</span>
+                                </button>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Coupon List</h3>
+                    <hr />
+                    <table class="table table-hover table-bordered" style="width: 100% !important" id="active-coupons-table">
+                        <thead>
+                            <tr>
+                                <th> Coupon Type </th>
+                                <th> Value </th>
+                                <th> Price in Point </th>
+                                <th> Amount </th>
+                                <th> Purchased </th>
+                                <th> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in CouponDal.GetAllActiveCoupons())
+                            {
+                                <tr>
+                                    <td>@item.CouponTypeValue</td>
+
+                                    @if (item.CouponType == Iruka.EF.Model.Enum.CouponType.Discount)
+                                    {
+                                        if (item.DiscountType == Iruka.EF.Model.Enum.FeeType.Percent)
+                                        {
+                                            <td><span>@item.DiscountValue</span>%</td>
+                                        }
+                                        else
+                                        {
+                                            <td><span>Rp. </span>@item.DiscountValue.ToString("N0")</td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>@item.FreeProduct</td>
+                                    }
+
+                                    <td>@item.PointPrice.ToString("N0")</td>
+                                    <td>@item.Amount</td>
+                                    <td>@item.Purchased</td>
+                                    <td style="width:10%">
+                                        @*<button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("Edit", "Coupons", new {id = item.Id })'" style="min-width:50px">
+                                                <i class="mdi mdi-pencil" style="margin:0px"></i>
+                                            </button>*@
+                                        <button type="button" class="btn btn-danger btn-fw" onclick="deleteCoupon('@item.Id')" style="min-width:50px">
+                                            <i class="mdi mdi-delete" style="margin:0px" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

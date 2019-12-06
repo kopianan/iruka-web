@@ -1,53 +1,73 @@
-﻿@model Iruka.EF.Model.Coupon
+﻿@model Iruka.Models.CouponDto
 
-@{
-    ViewBag.Title = "Edit";
+@section js {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/js/cleave.min.js"></script>
+    <script src="~/Scripts/js/coupon.js"></script>
 }
-
-<h2>Edit</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Coupon</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(m => m.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ServiceType, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ServiceType, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ServiceType, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <div class="row">
+        <div class="col-lg-6 col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2>
+                        Edit Coupon
+                        <a href="/Coupons/Index/"><i class="fa fa-arrow-circle-left float-right" aria-hidden="true"></i></a>
+                    </h2>
+                    <hr />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.MaxPoint, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MaxPoint, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MaxPoint, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.CouponType, new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.EnumDropDownListFor(m => m.CouponType, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.CouponType, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Bonus, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Bonus, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Bonus, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.PointPrice, new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.TextBoxFor(m => m.PointPrice, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.PointPrice, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.Amount, new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.TextBoxFor(m => m.Amount, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div id="discount-section" class="form-group row d-none">
+                        @Html.LabelFor(model => model.DiscountValue, htmlAttributes: new { @class = "control-label col-12" })
+                        <div class="col-12" style="display: flex; align-content: center">
+                            @Html.EnumDropDownListFor(model => model.DiscountType, htmlAttributes: new { @class = "form-control", @style = "width: 80px; background-color: #5aa0b3; color: white" })
+                            @Html.EditorFor(model => model.DiscountValue, new { htmlAttributes = new { @class = "form-control numeral" } })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.DiscountValue, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div id="product-section" class="form-group row d-none">
+                        @Html.LabelFor(m => m.FreeProduct, new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.TextBoxFor(m => m.FreeProduct, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FreeProduct, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="confirmSubmit(this.form)" class="btn btn-success btn-fw float-right">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save Changes
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

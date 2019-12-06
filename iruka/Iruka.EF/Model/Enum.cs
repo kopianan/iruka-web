@@ -49,5 +49,11 @@ namespace Iruka.EF.Model
             Owner,
             Customer
         }
+
+        public enum CouponType
+        {
+            Discount,
+            Product
+        }
     }
 }

@@ -48,8 +48,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.1.0\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -198,6 +198,7 @@
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DAL\CouponDal.cs" />
     <Compile Include="DAL\DALEvents.cs" />
     <Compile Include="DAL\DALProducts.cs" />
     <Compile Include="DAL\DALUsers.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="ModelAPI\LoginModelRequest.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BaseEntityDto.cs" />
+    <Compile Include="Models\CouponDto.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Models\EventDTO.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -480,6 +482,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\cleave.min.js" />
+    <Content Include="Scripts\js\coupon.js" />
     <Content Include="Scripts\js\event.js" />
     <Content Include="Scripts\js\main.js" />
     <Content Include="Scripts\js\product.js" />
@@ -5305,9 +5309,7 @@
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
-    <Content Include="Views\Coupons\Create.cshtml" />
     <Content Include="Views\Coupons\Delete.cshtml" />
-    <Content Include="Views\Coupons\Details.cshtml" />
     <Content Include="Views\Coupons\Edit.cshtml" />
     <Content Include="Views\Coupons\Index.cshtml" />
     <Content Include="Views\Transactions\Create.cshtml" />

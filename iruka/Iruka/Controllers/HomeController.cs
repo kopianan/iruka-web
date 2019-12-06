@@ -11,7 +11,14 @@ namespace Iruka.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.UserId = User.Identity.GetUserId(); return View();
+            var userId = User.Identity.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account", new { ReturnUrl = "/" });
+            }
+
+            ViewBag.UserId = userId; return View();
         }
     }
 }

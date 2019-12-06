@@ -93,11 +93,6 @@ $("#certificateUpload").change(function () {
 function initDataTable() {
     try {
         dataTable = $('#user-table').DataTable({
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0
-            }],
             "pageLength": 10,
             "scrollX": true,
             paging: true,

@@ -12,11 +12,15 @@ namespace Iruka.App_Start
     {
         public MappingProfile()
         {
-            Mapper.CreateMap<ApplicationUser, UserDTO>();
-            Mapper.CreateMap<Product, ProductDTO>();
-            Mapper.CreateMap<ProductDTO, Product>();
-            Mapper.CreateMap<EventDTO, Event>();
-            Mapper.CreateMap<Event, EventDTO>();
+            CreateMap<ApplicationUser, UserDTO>();
+            CreateMap<Product, ProductDTO>();
+            CreateMap<ProductDTO, Product>();
+            CreateMap<EventDTO, Event>();
+            CreateMap<Event, EventDTO>();
+
+            CreateMap<Coupon, CouponDto>().ReverseMap()
+                .ForMember(c => c.CreatedBy, opt => opt.Ignore())
+                .ForMember(c => c.CreatedDate, opt => opt.Ignore());
         }
     }
 }

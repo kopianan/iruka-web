@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using Iruka.EF.Model;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
@@ -19,47 +20,24 @@ namespace Iruka.Controllers
         // GET: Coupons
         public ActionResult Index()
         {
-            ViewBag.UserId = User.Identity.GetUserId(); return View(db.Coupons.ToList());
-        }
-
-        // GET: Coupons/Details/5
-        public ActionResult Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Coupon coupon = db.Coupons.Find(id);
-            if (coupon == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
-        }
-
-        // GET: Coupons/Create
-        public ActionResult Create()
-        {
             ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
-        // POST: Coupons/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ServiceType,MaxPoint,Bonus")] Coupon coupon)
+        public ActionResult Index(CouponDto couponDto)
         {
             if (ModelState.IsValid)
             {
-                coupon.Id = Guid.NewGuid();
-                coupon.CreatedDate = DateTime.Now;
+                var userId = User.Identity.GetUserId();
+                var coupon = Mapper.Map<CouponDto, Coupon>(couponDto);
+                coupon.NewCreatedData(userId);
                 db.Coupons.Add(coupon);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(couponDto);
         }
 
         // GET: Coupons/Edit/5
@@ -74,7 +52,10 @@ namespace Iruka.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
+
+            var couponDto = Mapper.Map<Coupon, CouponDto>(coupon);
+
+            ViewBag.UserId = User.Identity.GetUserId(); return View(couponDto);
         }
 
         // POST: Coupons/Edit/5
@@ -82,41 +63,35 @@ namespace Iruka.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ServiceType,MaxPoint,Bonus,CreatedDate")] Coupon coupon)
+        public ActionResult Edit(CouponDto couponDto)
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                var coupon = db.Coupons.SingleOrDefault(x => x.Id == couponDto.Id);
+                coupon = Mapper.Map(couponDto, coupon);
+                coupon.SetModifiedData(userId);
                 db.Entry(coupon).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
+            ViewBag.UserId = User.Identity.GetUserId(); return View(couponDto);
         }
 
-        // GET: Coupons/Delete/5
-        public ActionResult Delete(Guid? id)
+        [HttpPost]
+        public ActionResult Delete(Guid id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                Coupon coupon = db.Coupons.Find(id);
+                coupon.SetIsActive(false, User.Identity.GetUserId());
+                db.SaveChanges();
+                return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
             }
-            Coupon coupon = db.Coupons.Find(id);
-            if (coupon == null)
+            catch (Exception)
             {
-                return HttpNotFound();
+                return Json(new { error = "Error" }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.UserId = User.Identity.GetUserId(); return View(coupon);
-        }
-
-        // POST: Coupons/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-            Coupon coupon = db.Coupons.Find(id);
-            db.Coupons.Remove(coupon);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

@@ -123,6 +123,14 @@
     <Compile Include="Migrations\201912011420215_AddedBranchEntity.Designer.cs">
       <DependentUpon>201912011420215_AddedBranchEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912022006454_CouponNumberAttrChangedToDouble.cs" />
+    <Compile Include="Migrations\201912022006454_CouponNumberAttrChangedToDouble.Designer.cs">
+      <DependentUpon>201912022006454_CouponNumberAttrChangedToDouble.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912022017288_ProductAddedToCoupon.cs" />
+    <Compile Include="Migrations\201912022017288_ProductAddedToCoupon.Designer.cs">
+      <DependentUpon>201912022017288_ProductAddedToCoupon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\Branch.cs" />
@@ -188,6 +196,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912011420215_AddedBranchEntity.resx">
       <DependentUpon>201912011420215_AddedBranchEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912022006454_CouponNumberAttrChangedToDouble.resx">
+      <DependentUpon>201912022006454_CouponNumberAttrChangedToDouble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912022017288_ProductAddedToCoupon.resx">
+      <DependentUpon>201912022017288_ProductAddedToCoupon.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
