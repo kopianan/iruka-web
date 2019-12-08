@@ -25,15 +25,15 @@
     $("#addressProfile").text("Holis Regency Blok M30");
     $("#emailProfile").text("lukito@iruka.com");
     $("#phoneProfile").text("+987654321");
-    $("#descProfile").text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+    $("#descProfile").text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
     var address = "http://iruka.diodeiva.dev/Media/ProfileTemp1.jpg";
-    $("#imgProfile").attr("src", address );
-    
-    $("#transactionHistoryForm").removeClass("d-none");
+    $('#imgProfile').css('background-image', 'url(' + address + ')');
+    $('fieldset').hide();
+    $('fieldset').fadeIn(650);
+   
     $(".coupon-image").removeClass("d-none");
 
-    $("#productPoint").text("7/8");
-    $("#servicePoint").text("4/7");
+    $("#productPoint").text("195");
     $("#transTypePoint").text("Service");
     $("#descPoint").text("Transaction Description");
     $("#datePoint").text("24 November 2019");
