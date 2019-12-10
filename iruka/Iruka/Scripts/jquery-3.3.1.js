@@ -6052,7 +6052,7 @@ var getStyles = function( elem ) {
 			view = window;
 		}
 
-		return view.getComputedStyle( elem );
+		ViewBag.UserId = User.Identity.GetUserId(); return View.getComputedStyle( elem );
 	};
 
 var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );

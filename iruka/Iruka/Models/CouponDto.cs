@@ -30,5 +30,7 @@ namespace Iruka.Models
 
         [Display(Name = "Free Product")]
         public string FreeProduct { get; set; }
+
+        public string CouponValue { get; set; }
     }
 }

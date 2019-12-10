@@ -14,25 +14,21 @@
     <link rel="stylesheet" href="~/template/src/assets/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" href="~/template/src/assets/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="~/template/src/assets/vendors/css/vendor.bundle.addons.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.common-material.min.css" />
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.material.min.css" />
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.material.mobile.min.css" />
-
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2019.3.1023/styles/kendo.material.mobile.min.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" rel="stylesheet" />
-
-    <link href="~/template/src/assets/vendors/iconfonts/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo.default-v2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" />
+    <link rel="stylesheet" href="~/template/src/assets/vendors/iconfonts/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="~/template/src/assets/css/shared/style.css">
     <link rel="stylesheet" href="~/template/src/assets/css/demo_1/style.css">
-    <link rel="shortcut icon" href="~/template/src/assets/images/favicon.png" />
-
-
-    <link href="~/Content/Site.css" rel="stylesheet" />
-    <link href="~/Css/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    <link rel="stylesheet" href="~/Css/toastr.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/r-2.2.3/rr-1.2.6/sc-2.0.1/datatables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link rel="shortcut icon" href="~/template/src/assets/images/favicon.png" />
+
     @RenderSection("css", required: false)
 </head>
 <body data-uid="@(ViewBag.UserId)">
@@ -295,8 +291,9 @@
         </div>
         <!-- page-body-wrapper ends -->
     </div>
-    <script src="~/Scripts/jquery-3.3.1.js"></script>
-    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/js/global.min.js"></script>
+
     <script src="~/Scripts/kendo.all.min.js"></script>
     <script src="~/template/src/assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="~/template/src/assets/vendors/js/vendor.bundle.addons.js"></script>
@@ -307,9 +304,8 @@
     <script src="~/Scripts/js/main.js"></script>
     <script src="~/template/src/assets/js/demo_1/dashboard.js"></script>
     <script src="~/template/src/assets/js/shared/misc.js"></script>
-
     <script src="~/Scripts/js/toastr.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/r-2.2.3/rr-1.2.6/sc-2.0.1/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs4/dt-1.10.20/r-2.2.3/rr-1.2.6/sc-2.0.1/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script>
         var userId = $("body").data("uid");

@@ -193,7 +193,7 @@
     <Compile Include="Controllers\API\ProductController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\MobileAPIController.cs" />
+    <Compile Include="Controllers\MobileController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
@@ -205,6 +205,7 @@
     <Compile Include="DAL\Global.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\TransactionDal.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -395,7 +396,9 @@
     <Content Include="Media\email.png" />
     <Content Include="Media\login-background-min.jpg" />
     <Content Include="Media\logo-login.png" />
+    <Content Include="Media\money.png" />
     <Content Include="Media\name.png" />
+    <Content Include="Media\payment.png" />
     <Content Include="Media\phone.png" />
     <Content Include="Media\product.png" />
     <Content Include="Media\ProfileTemp1.jpg" />
@@ -496,6 +499,10 @@
     <Content Include="Scripts\js\cleave.min.js" />
     <Content Include="Scripts\js\coupon.js" />
     <Content Include="Scripts\js\event.js" />
+    <Content Include="Scripts\js\global.js" />
+    <Content Include="Scripts\js\global.min.js">
+      <DependentUpon>global.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\js\main.js" />
     <Content Include="Scripts\js\product.js" />
     <Content Include="Scripts\js\toastr.js" />

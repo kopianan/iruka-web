@@ -10,10 +10,10 @@ namespace Iruka.Models
     {
         public Guid CustomerId { get; set; }
         public Guid? CouponId { get; set; }
-        public Coupon Coupon { get; set; }
+        public string CouponValue { get; set; }
         public double SubTotal { get; set; }
         public double Total { get; set; }
-        public string Description { get; set; }
+        public string Notes { get; set; }
         public int EarnedPoint { get; set; }
     }
 }

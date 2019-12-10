@@ -131,6 +131,14 @@
     <Compile Include="Migrations\201912022017288_ProductAddedToCoupon.Designer.cs">
       <DependentUpon>201912022017288_ProductAddedToCoupon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912090620430_TransactionModelRevamp.cs" />
+    <Compile Include="Migrations\201912090620430_TransactionModelRevamp.Designer.cs">
+      <DependentUpon>201912090620430_TransactionModelRevamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090713285_UserPointsBalanceAdded.cs" />
+    <Compile Include="Migrations\201912090713285_UserPointsBalanceAdded.Designer.cs">
+      <DependentUpon>201912090713285_UserPointsBalanceAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\Branch.cs" />
@@ -202,6 +210,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912022017288_ProductAddedToCoupon.resx">
       <DependentUpon>201912022017288_ProductAddedToCoupon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090620430_TransactionModelRevamp.resx">
+      <DependentUpon>201912090620430_TransactionModelRevamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090713285_UserPointsBalanceAdded.resx">
+      <DependentUpon>201912090713285_UserPointsBalanceAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

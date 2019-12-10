@@ -57,8 +57,10 @@
             padding-top: 0.75em;
             padding-bottom: 0.75em;
             padding-left: 0 !important;
+            padding-right: 0 !important;
             display: inline-flex;
             justify-content: center;
+            margin-bottom: 0;
         }
 
         .textbox-cash {
@@ -83,194 +85,154 @@
 @section js{
     <script src="~/Scripts/js/cleave.min.js"></script>
     <script src="~/Scripts/js/transaction.js"></script>
-
-    <script>
-        let txtSubTotal = new Cleave("#SubTotal", {
-            numeral: true,
-            numericOnly: true,
-            numeralDecimalScale: 0,
-            numeralDecimalMark: ',',
-            delimiter: '.'
-        });
-
-        $('#SubTotal').keyup(function () {
-            if ($('#SubTotal').val() == "") {
-                txtSubTotal.setRawValue(0);
-            }
-        });
-    </script>
 }
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row mb-5">
-                    <div class="col-4 k-display-flex justify-content-center">
-                        <input class="form-control border-warning" type="text" style="font-size: small" placeholder="Barcode scan result..." autocomplete="off" id="scanId" />
-                        <button type="button" class="btn btn-warning no-wrap text-center" id="btnInputUserId">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                            <span>Search</span>
-                        </button>
-                    </div>
-                </div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.CustomerId, new { id = "CustomerId" })
+    @Html.HiddenFor(model => model.CouponId, new { id = "CouponId" })
+    @Html.HiddenFor(model => model.Total, new { id = "Total" })
 
-                <div class="row">
-                    <div class="col-6">
-                        <fieldset>
-                            <legend>Customer Data</legend>
-                            <div class="avatar-upload">
-                                <div class="avatar-preview">
-                                    <div id="imgProfile" style="background-image: url('../../Media/avatar-placeholder.png');">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="profile-section">
-                                <p class="profile-info">
-                                    <img src="~/Media/name.png" alt="NAME" />
-                                    <label id="nameProfile" class="col-form-label">-</label>
-                                </p>
-
-                                <p class="profile-info">
-                                    <img src="~/Media/address.png" alt="ADDRESS" />
-                                    <label id="addressProfile">-</label>
-                                </p>
-
-                                <p class="profile-info">
-                                    <img src="~/Media/phone.png" alt="PHONE" />
-                                    <label id="phoneProfile">-</label>
-                                </p>
-
-                                <p class="profile-info">
-                                    <img src="~/Media/email.png" alt="EMAIL" />
-                                    <label id="emailProfile">-</label>
-                                </p>
-
-                                <p class="profile-info">
-                                    <img src="~/Media/desc.png" alt="DESCRIPTION" />
-                                    <label id="descProfile">-</label>
-                                </p>
-                            </div>
-                        </fieldset>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-5">
+                        <div class="col-5" style="display: flex; justify-content: center">
+                            <input class="form-control border-warning" type="text" style="font-size: small" placeholder="Barcode scan result..." autocomplete="off" id="scan-result" />
+                            <button type="button" class="btn btn-warning no-wrap text-center" id="btn-input-scan">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="col-6">
-                        <fieldset>
-                            <legend>Transaction History</legend>
-
-                            <div id="reloadTable" class="w-100" style="margin-top: 10px; height: 77%">
-                                @Html.Partial("/Views/Partial/Partial_HistoryTransaction.cshtml")
-                            </div>
-
-                            <p class="profile-info mt-3">
-                                <img src="~/Media/coins.png" alt="POINT" class="mr-3" />
-                                <label id="productPoint" class="font-weight-bold" style="color: green !important">0</label>
-                            </p>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 mt-5">
-        <div class="card">
-            <div class="card-header" style="background:#f0f3f5; padding:0.5rem 1.81rem">
-                <label>Transaction</label>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <fieldset>
-                            <legend>Purchaseable Coupons</legend>
-
-                            <div id="purchaseable-coupons-table" class="mt-3">
-                                <div class="table-responsive" style="overflow-y: auto; height: 100%">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Coupon Type</th>
-                                                <th>Value</th>
-                                                <th>Price in Point</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Discount</td>
-                                                <td>15%</td>
-                                                <td>50</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Discount</td>
-                                                <td>Rp. 50,000</td>
-                                                <td>30</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Product</td>
-                                                <td>Free Indomie Rebus</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Product</td>
-                                                <td>Es Kopi Susu</td>
-                                                <td>10</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Product</td>
-                                                <td>Jeletot</td>
-                                                <td>190</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    <div class="col-6">
-                        <fieldset style="border-color: orange !important">
-                            <legend style="color: orange !important">Transaction Data</legend>
-
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <label class="col-12 text-center">Shopping Total</label>
-                                        <div class="col-6 mx-auto textbox-cash">
-                                            @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control currency-label", @disabled = "disabled", @Value = "Rp", @style = "width: 65px; font-size: medium" } })
-                                            @Html.EditorFor(m => m.SubTotal, new { htmlAttributes = new { @class = "form-control numeral", @style = "font-size: medium" } })
+                    <div class="row">
+                        <div class="col-6">
+                            <fieldset>
+                                <legend>Customer Data</legend>
+                                <div class="avatar-upload">
+                                    <div class="avatar-preview">
+                                        <div id="profile-img" style="background-image: url('../../Media/avatar-placeholder.png');">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12 mt-3">
-                                    <p id="product-coupon" class="profile-info coupon-value-container d-none">
-                                        <img src="~/Media/delivery-package.png" alt="PRODUCT" class="mr-3" />
-                                        <label id="product-coupon-value" class="font-weight-bold" style="color: green !important">Free Indomie Rebus</label>
+                                <div class="profile-section">
+                                    <p class="profile-info">
+                                        <img src="~/Media/name.png" alt="NAME" />
+                                        <label id="lbl-profile-name">-</label>
                                     </p>
 
-                                    <p id="discount-coupon" class="profile-info coupon-value-container">
-                                        <img src="~/Media/discount.png" alt="DISCOUNT" class="mr-3" />
-                                        <label id="discount-coupon-value" class="font-weight-bold" style="color: green !important">Discount 15%</label>
+                                    <p class="profile-info">
+                                        <img src="~/Media/address.png" alt="ADDRESS" />
+                                        <label id="lbl-profile-address">-</label>
+                                    </p>
+
+                                    <p class="profile-info">
+                                        <img src="~/Media/phone.png" alt="PHONE" />
+                                        <label id="lbl-profile-phone">-</label>
+                                    </p>
+
+                                    <p class="profile-info">
+                                        <img src="~/Media/email.png" alt="EMAIL" />
+                                        <label id="lbl-profile-email">-</label>
+                                    </p>
+
+                                    <p class="profile-info mb-3">
+                                        <img src="~/Media/desc.png" alt="DESCRIPTION" />
+                                        <label id="lbl-profile-desc">-</label>
                                     </p>
                                 </div>
+                            </fieldset>
+                        </div>
 
-                                <div class="col-12 mt-3 mb-3">
-                                    <label>Notes</label>
-                                    <textarea id="descForm" class="form-control" rows="2"></textarea>
+                        <div class="col-6">
+                            <fieldset>
+                                <legend>Transaction History</legend>
+
+                                <div id="reloadTable" class="w-100" style="margin-top: 10px; height: 80%">
+                                    <div id="transaction-history-grid"></div>
                                 </div>
 
-                                <div class="col-12 mb-3">
-                                    <button type="button" onclick="confirmSubmit()" class="btn wide btn-danger float-right">
-                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                        <span class="font-weight-bold">Submit Transaction</span>
-                                    </button>
+                                <p class="profile-info mt-3">
+                                    <img src="~/Media/coins.png" alt="POINT" class="mr-3" />
+                                    <label id="lbl-customer-points" class="font-weight-bold" style="color: green !important">0</label>
+                                </p>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-5">
+            <div class="card">
+                <div class="card-header" style="background:#f0f3f5; padding:0.5rem 1.81rem">
+                    <label>Transaction</label>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <fieldset>
+                                <legend>Purchaseable Coupons</legend>
+
+                                <div id="purchaseable-coupons-grid" class="mt-3">
+
                                 </div>
-                            </div>
-                        </fieldset>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-6">
+                            <fieldset style="border-color: orange !important">
+                                <legend style="color: orange !important">Create Transaction</legend>
+
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <label class="col-12 text-center">Shopping Total</label>
+                                            <div class="col-6 mx-auto textbox-cash">
+                                                @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control currency-label", @disabled = "disabled", @Value = "Rp", @style = "width: 65px; font-size: medium" } })
+                                                @Html.EditorFor(m => m.SubTotal, new { htmlAttributes = new { @class = "form-control numeral", @style = "font-size: medium" } })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-3">
+                                        <p id="product-coupon" class="profile-info coupon-value-container d-none">
+                                            <img src="~/Media/delivery-package.png" alt="PRODUCT" class="mr-3" />
+                                            <label id="product-coupon-value" class="font-weight-bold" style="color: green !important">-</label>
+                                        </p>
+
+                                        <p id="discount-coupon" class="profile-info coupon-value-container d-none">
+                                            <img src="~/Media/discount.png" alt="DISCOUNT" class="mr-3" />
+                                            <label id="discount-coupon-value" class="font-weight-bold" style="color: green !important">-</label>
+                                        </p>
+                                    </div>
+
+                                    <div class="col-12 mt-3 text-center">
+                                        <img src="~/Media/payment.png" alt="TOTAL" class="mr-3" style="width: 35px; height: 35px" />
+                                        <label id="lbl-invoice-total" class="font-weight-bold" style="color: #2F6EB1 !important">Rp. 0</label>
+                                    </div>
+
+                                    <div class="col-12 mt-3 mb-3">
+                                        <label>Notes</label>
+                                        @Html.TextAreaFor(m => m.Notes, htmlAttributes: new { @class = "form-control", @style = "font-size: medium", rows = 2 })
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <button type="button" onclick="confirmSubmit(this.form)" class="btn wide btn-danger float-right">
+                                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            <span class="font-weight-bold">Submit Transaction</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}

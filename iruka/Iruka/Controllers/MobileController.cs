@@ -1,4 +1,6 @@
-﻿using Iruka.DAL;
+﻿using AutoMapper;
+using Iruka.DAL;
+using Iruka.EF.Model;
 using Iruka.ModelAPI;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
@@ -18,9 +20,67 @@ using System.Web.Http;
 
 namespace Iruka.Controllers
 {
-    public class MobileAPIController : ApiController
+    public class MobileController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        [HttpGet]
+        public IHttpActionResult GetSpecificCustomerTransactionHistory(string id)
+        {
+            try
+            {
+                if (Global.CheckAccessKey(Global.GetAccessKeyFromHeader(Request)))
+                {
+                    var guidCustomerId = Guid.Parse(id);
+
+                    return Ok(TransactionDal.GetCustomerTransactionHistory(db, guidCustomerId));
+                }
+                else
+                {
+                    return BadRequest(Global.Message_WrongAccessKey);
+                }
+            }
+            catch (AccessViolationException)
+            {
+                return BadRequest(Global.Message_NoAccessKey);
+            }
+            catch (Exception)
+            {
+                return BadRequest(Global.Message_ErrorMessage);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetSpecificCustomerLastTransaction(string id)
+        {
+            try
+            {
+                if (Global.CheckAccessKey(Global.GetAccessKeyFromHeader(Request)))
+                {
+                    var guidCustomerId = Guid.Parse(id);
+                    var lastTransaction = TransactionDal.GetCustomerTransactionHistory(db, guidCustomerId).FirstOrDefault();
+                    var customerPoints = db.Users.SingleOrDefault(x => x.Id == id).Points;
+
+                    return Ok(new
+                    {
+                        lastTransaction,
+                        customerPoints
+                    });
+                }
+                else
+                {
+                    return BadRequest(Global.Message_WrongAccessKey);
+                }
+            }
+            catch (AccessViolationException)
+            {
+                return BadRequest(Global.Message_NoAccessKey);
+            }
+            catch (Exception)
+            {
+                return BadRequest(Global.Message_ErrorMessage);
+            }
+        }
 
         [HttpPost]
         public HttpResponseMessage Login(LoginModelRequest request)
@@ -56,7 +116,7 @@ namespace Iruka.Controllers
                             role
                         };
 
-                        if (role=="Groomer" || role=="Customer" || role=="Owner")
+                        if (role == "Groomer" || role == "Customer" || role == "Owner")
                         {
                             return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
                         }
@@ -111,7 +171,7 @@ namespace Iruka.Controllers
             try
             {
                 var productList = db.Product.ToList();
-                
+
                 return Request.CreateResponse(HttpStatusCode.OK, new { productList }, MediaTypeHeaderValue.Parse("application/json"));
             }
             catch (Exception e)
@@ -149,7 +209,7 @@ namespace Iruka.Controllers
                 {
                     if (um.IsInRole(item.Id, request.Role))
                     {
-                        listUser.Add(new UserDTO { Id = item.Id, Name = item.Name, Email = item.Email, Certificate = item.Certificate, PhoneNumber = item.PhoneNumber, Address = item.Address, Description = item.Description,Picture=item.Picture });
+                        listUser.Add(new UserDTO { Id = item.Id, Name = item.Name, Email = item.Email, Certificate = item.Certificate, PhoneNumber = item.PhoneNumber, Address = item.Address, Description = item.Description, Picture = item.Picture });
                     }
                 }
 
@@ -240,7 +300,7 @@ namespace Iruka.Controllers
                     var splitted = file.LocalFileName.Split('\\');
                     root += "UserPicture\\" + splitted[splitted.Length - 1];
 
-                    try           
+                    try
                     {
                         if (File.Exists(root))
                         {
@@ -262,7 +322,7 @@ namespace Iruka.Controllers
                 var pathUrl = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
                 var passwordHasher = new PasswordHasher();
 
-                var user = new ApplicationUser { Name = name,UserName=email, Email = email,CreatedDate=DateTime.Now, PasswordHash = passwordHasher.HashPassword(password), PhoneNumber = phonenumber, Address = address, Description = description, Picture = pathUrl};
+                var user = new ApplicationUser { Name = name, UserName = email, Email = email, CreatedDate = DateTime.Now, PasswordHash = passwordHasher.HashPassword(password), PhoneNumber = phonenumber, Address = address, Description = description, Picture = pathUrl };
                 db.Users.Add(user);
 
                 IdentityUserRole userRole = new IdentityUserRole();

@@ -114,23 +114,7 @@
                             {
                                 <tr>
                                     <td>@item.CouponTypeValue</td>
-
-                                    @if (item.CouponType == Iruka.EF.Model.Enum.CouponType.Discount)
-                                    {
-                                        if (item.DiscountType == Iruka.EF.Model.Enum.FeeType.Percent)
-                                        {
-                                            <td><span>@item.DiscountValue</span>%</td>
-                                        }
-                                        else
-                                        {
-                                            <td><span>Rp. </span>@item.DiscountValue.ToString("N0")</td>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <td>@item.FreeProduct</td>
-                                    }
-
+                                    <td>@item.CouponValue</td>
                                     <td>@item.PointPrice.ToString("N0")</td>
                                     <td>@item.Amount</td>
                                     <td>@item.Purchased</td>

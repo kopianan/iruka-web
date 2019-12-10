@@ -17,14 +17,18 @@ namespace Iruka.DAL
         private static readonly string AccessKey = "d78c1a5c-ccbe-4c26-ac08-43ed66c8afb9";
         public static readonly string Message_ErrorMessage = "Error processing your request, Please contact support!";
         public static readonly string Message_WrongPassword = "Wrong Username or Password";
+        public static readonly string Message_NoAccessKey = "No access key given !";
         public static readonly string Message_WrongAccessKey = "Wrong access key given, please update your software.";
         public static readonly string Message_SuccessMessage = "Process finished succesfully";
-        public static IList<string> GetCurrentMenuList(string userId)
+
+        public static IList<string> GetUserRole(string userId)
         {
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
             var listRoles = um.GetRoles(userId);
+
             return listRoles;
         }
+
         public static bool CheckIfUserInRole(IList<string> userRoles, List<string> targetRoles)
         {
             foreach (var targetRole in targetRoles)
@@ -115,6 +119,18 @@ namespace Iruka.DAL
             else
             {
                 return "-";
+            }
+        }
+
+        public static string GetUserNameById(string customerId)
+        {
+            try
+            {
+                return DB.Users.SingleOrDefault(x => x.Id == customerId).Name;
+            }
+            catch (Exception)
+            {
+                return "No Data";
             }
         }
         public static ApplicationDbContext DB

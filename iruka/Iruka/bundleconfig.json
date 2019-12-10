@@ -16,5 +16,11 @@
     "inputFiles": [
       "Content/bootstrap.css"
     ]
+  },
+  {
+    "outputFileName": "Scripts/js/global.min.js",
+    "inputFiles": [
+      "Scripts/js/global.js"
+    ]
   }
 ]
