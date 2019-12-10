@@ -194,7 +194,7 @@
                                             <label class="col-12 text-center">Shopping Total</label>
                                             <div class="col-6 mx-auto textbox-cash">
                                                 @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control currency-label", @disabled = "disabled", @Value = "Rp", @style = "width: 65px; font-size: medium" } })
-                                                @Html.EditorFor(m => m.SubTotal, new { htmlAttributes = new { @class = "form-control numeral", @style = "font-size: medium" } })
+                                                @Html.EditorFor(m => m.SubTotal, new { htmlAttributes = new { @class = "form-control numeral", @style = "font-size: medium", @Value = 0 } })
                                             </div>
                                         </div>
                                     </div>

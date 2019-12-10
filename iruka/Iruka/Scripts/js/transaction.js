@@ -223,8 +223,16 @@ function confirmSubmit(form) {
                 text: 'Yes!',
                 btnClass: 'btn-red',
                 action: function () {
-                    $('#SubTotal').val(txtSubTotal.getRawValue());
-                    form.submit()
+                    if ($('#CustomerId').val() == "") {
+                        toastr.error('Please input customer data!');
+                    } else {
+                        if ($('#Total').val() <= 0) {
+                            toastr.error('Please input transaction amount!');
+                        } else {
+                            $('#SubTotal').val(txtSubTotal.getRawValue());
+                            form.submit();
+                        }
+                    }
                 }
             },
             cancel: {

@@ -26,7 +26,7 @@ namespace Iruka.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.UserId = User.Identity.GetUserId(); return View(new TransactionDto { SubTotal = 0, Total = 0 });
+            ViewBag.UserId = User.Identity.GetUserId(); return View();
         }
 
         [HttpPost]
