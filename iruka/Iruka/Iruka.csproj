@@ -191,6 +191,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\EventController.cs" />
     <Compile Include="Controllers\API\ProductController.cs" />
+    <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\MobileController.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="ModelAPI\LoginModelRequest.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BaseEntityDto.cs" />
+    <Compile Include="Models\BranchDto.cs" />
     <Compile Include="Models\CouponDto.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Models\EventDTO.cs" />
@@ -392,6 +394,7 @@
     <Content Include="Media\cutting.png" />
     <Content Include="Media\delivery-package.png" />
     <Content Include="Media\desc.png" />
+    <Content Include="Media\direction-arrow-right.png" />
     <Content Include="Media\discount.png" />
     <Content Include="Media\email.png" />
     <Content Include="Media\login-background-min.jpg" />
@@ -5338,6 +5341,7 @@
     <Content Include="Views\Account\InternalUserEdit.cshtml" />
     <Content Include="Views\Partial\Partial_EndUsersTable.cshtml" />
     <Content Include="Views\Account\EndUserEdit.cshtml" />
+    <Content Include="Views\Branches\PointRateSetup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

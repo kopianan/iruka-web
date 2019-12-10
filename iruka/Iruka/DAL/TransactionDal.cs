@@ -14,7 +14,7 @@ namespace Iruka.DAL
         {
             var branchPointRate = db.Branches.ToList().FirstOrDefault().PointRate;
 
-            return (int)Math.Floor(transactionTotal / (double)branchPointRate);
+            return (int)Math.Floor(transactionTotal / branchPointRate);
         }
 
         public static void DeductCustomerPointByCoupon(ApplicationDbContext db, string customerId, Guid? couponId)

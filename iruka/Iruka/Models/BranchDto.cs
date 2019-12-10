@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Iruka.EF.Model
+namespace Iruka.Models
 {
-    public class Branch : BaseEntity<Guid>
+    public class BranchDto : BaseEntityDto
     {
+        public Guid Id { get; set; }
         public string BranchName { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
@@ -17,6 +18,8 @@ namespace Iruka.EF.Model
         public string Phone { get; set; }
         public string MobilePhone { get; set; }
         public string Whatsapp { get; set; }
+
+        [Display(Name = "Point Rate")]
         public double PointRate { get; set; }
     }
 }

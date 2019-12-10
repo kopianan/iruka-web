@@ -1,0 +1,50 @@
+﻿@model Iruka.Models.BranchDto
+
+@section js{
+    <script src="~/Scripts/js/cleave.min.js"></script>
+
+    <script>
+        let txtPoinRate = new Cleave("#PointRate", {
+            numeral: true,
+            numericOnly: true,
+            numeralDecimalScale: 0,
+            numeralDecimalMark: ',',
+            delimiter: '.'
+        });
+
+        function confirmSubmit(form) {
+            $('#PointRate').val(txtPoinRate.getRawValue());
+            form.submit();
+        }
+    </script>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-6 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Setup Point Rate</h2>
+                    <hr />
+                    <div class="form-group row">
+                        @Html.LabelFor(m => m.PointRate, new { @class = "col-12 control-label" })
+                        <div class="col-6 textbox-cash">
+                            @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control currency-label", @disabled = "disabled", @Value = "Rp", @style = "width: 65px; font-size: medium" } })
+                            @Html.EditorFor(m => m.PointRate, new { htmlAttributes = new { @class = "form-control numeral", @style = "font-size: medium" } })
+                        </div>
+
+                        <div class="col-6">
+                            <img src="~/Media/direction-arrow-right.png" alt="=>" class="img-icon" style="margin-right: 22px" />
+                            <span class="mr-2">Becomes 1 Poin</span>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit(this.form)" type="button" class="btn btn-success float-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

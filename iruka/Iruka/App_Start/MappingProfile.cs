@@ -29,6 +29,7 @@ namespace Iruka.App_Start
                 .ForMember(c => c.CreatedDate, opt => opt.Ignore());
 
             CreateMap<ApplicationUser, CustomerDataDto>();
+            CreateMap<Branch, BranchDto>();
         }
     }
 }
