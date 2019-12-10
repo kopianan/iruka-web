@@ -63,7 +63,7 @@ namespace Iruka.Controllers
 
                     return Ok(new
                     {
-                        lastTransaction,
+                        lastTransaction = lastTransaction == null ? new TransactionDto() : lastTransaction,
                         customerPoints
                     });
                 }

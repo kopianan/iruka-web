@@ -19,10 +19,13 @@ namespace Iruka.DAL
 
         public static void DeductCustomerPointByCoupon(ApplicationDbContext db, string customerId, Guid? couponId)
         {
-            var targetCustomer = db.Users.SingleOrDefault(x => x.Id == customerId);
-            var targetCouponPointPrice = db.Coupons.SingleOrDefault(x => x.Id == couponId).PointPrice;
+            if (couponId != null && couponId != Guid.Empty)
+            {
+                var targetCustomer = db.Users.SingleOrDefault(x => x.Id == customerId);
+                var targetCouponPointPrice = db.Coupons.SingleOrDefault(x => x.Id == couponId).PointPrice;
 
-            targetCustomer.Points -= targetCouponPointPrice;
+                targetCustomer.Points -= targetCouponPointPrice;
+            }
         }
 
         public static void AddPointToCustomer(ApplicationDbContext db, string customerId, int pointAmount)
