@@ -382,15 +382,28 @@ namespace Iruka.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                     var targetUser = db.Users.SingleOrDefault(x => x.Email == model.Email);
+                    var userRoles = um.GetRoles(targetUser.Id);
 
-                    if (targetUser.IsActive)
+                    if (!Global.CheckIfUserInRole(userRoles, new List<string>() { RoleList.Admin, RoleList.ContentManager, RoleList.Finance, RoleList.SuperAdmin }))
                     {
-                        return RedirectToLocal(returnUrl);
+                        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                    }
+                    else
+                    {
+                        if (targetUser.IsActive)
+                        {
+                            return RedirectToLocal(returnUrl);
+                        }
+                        else
+                        {
+                            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                            ModelState.AddModelError("", "Your account is inactive, please contact Administrator!");
+                        }
                     }
 
-                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                    ModelState.AddModelError("", "Your account is inactive, please contact Administrator!");
                     return View(model);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

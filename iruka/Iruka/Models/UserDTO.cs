@@ -49,5 +49,6 @@ namespace Iruka.Models
         public string Certificate { get; set; }
         public string Role { get; set; }
         public string Base64URLCertificate { get; set; }
+        public string CreatedDate { get; set; }
     }
 }

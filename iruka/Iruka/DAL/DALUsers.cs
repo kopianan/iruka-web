@@ -34,7 +34,8 @@ namespace Iruka.DAL
                             PhoneNumber = user.PhoneNumber,
                             Address = user.Address,
                             Description = user.Description,
-                            Role = role
+                            Role = role,
+                            CreatedDate = Global.DateToString(user.CreatedDate)
                         });
                     }
                 }

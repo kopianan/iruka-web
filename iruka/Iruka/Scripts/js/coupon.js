@@ -43,9 +43,9 @@ function confirmSubmit(form) {
     }
 }
 
-function deleteEvent(id) {
+function deleteCoupon(id) {
     $.confirm({
-        title: 'Delete event ?',
+        title: 'Delete coupon ?',
         content: `You won't be able to revert this!`,
         buttons: {
             yes: {
@@ -54,7 +54,7 @@ function deleteEvent(id) {
                 action: function () {
                     $.ajax({
                         async: false,
-                        url: "/Events/DeleteEvent",
+                        url: "/Coupons/Delete",
                         data: "{ 'id': '" + id + "' }",
                         dataType: "json",
                         type: "POST",
@@ -67,7 +67,7 @@ function deleteEvent(id) {
                             } else {
                                 $.alert({
                                     title: 'Encountered an error!',
-                                    content: `Can't delete event, please contact support!`,
+                                    content: `Can't delete coupon, please contact support!`,
                                     text: 'Cancelled!',
                                     type: 'orange',
                                     typeAnimated: true
