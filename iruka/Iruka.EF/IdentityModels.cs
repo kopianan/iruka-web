@@ -19,10 +19,13 @@ namespace Iruka.Models
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Points { get; set; }
+        public string PIC { get; set; }
+        public bool Show { get; set; }
 
         public ApplicationUser()
         {
             IsActive = true;
+            Show = true;
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

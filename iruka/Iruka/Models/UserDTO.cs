@@ -50,5 +50,7 @@ namespace Iruka.Models
         public string Role { get; set; }
         public string Base64URLCertificate { get; set; }
         public string CreatedDate { get; set; }
+        public string PIC { get; set; }
+        public bool Show { get; set; }
     }
 }

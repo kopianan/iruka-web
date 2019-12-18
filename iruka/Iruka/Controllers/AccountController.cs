@@ -55,7 +55,8 @@ namespace Iruka.Controllers
                     Email = userDTO.Email,
                     UserName = userDTO.Email,
                     Description = userDTO.Description ?? "",
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    PIC = userDTO.PIC ?? ""
                 };
                 var result = await UserManager.CreateAsync(newUser, userDTO.Password);
 
@@ -121,7 +122,8 @@ namespace Iruka.Controllers
                     Email = userDTO.Email,
                     UserName = userDTO.Email,
                     Description = userDTO.Description ?? "",
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    PIC = userDTO.PIC ?? ""
                 };
                 var result = await UserManager.CreateAsync(newUser, userDTO.Password);
 
@@ -206,6 +208,7 @@ namespace Iruka.Controllers
             targetUser.PhoneNumber = userDTO.PhoneNumber;
             targetUser.Address = userDTO.Address;
             targetUser.Description = userDTO.Description;
+            targetUser.PIC = userDTO.PIC ?? "";
 
             if (targetUser.Picture != userDTO.Picture)
             {
@@ -261,6 +264,7 @@ namespace Iruka.Controllers
             targetUser.PhoneNumber = userDTO.PhoneNumber;
             targetUser.Address = userDTO.Address;
             targetUser.Description = userDTO.Description;
+            targetUser.PIC = userDTO.PIC ?? "";
 
             if (targetUser.Picture != userDTO.Picture)
             {

@@ -143,6 +143,14 @@
     <Compile Include="Migrations\201912101439513_BranchPointRateToDouble.Designer.cs">
       <DependentUpon>201912101439513_BranchPointRateToDouble.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912181016124_AddPICToUserForGroomer.cs" />
+    <Compile Include="Migrations\201912181016124_AddPICToUserForGroomer.Designer.cs">
+      <DependentUpon>201912181016124_AddPICToUserForGroomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912181144161_AddShowStatusToUserForGroomer.cs" />
+    <Compile Include="Migrations\201912181144161_AddShowStatusToUserForGroomer.Designer.cs">
+      <DependentUpon>201912181144161_AddShowStatusToUserForGroomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\Branch.cs" />
@@ -223,6 +231,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912101439513_BranchPointRateToDouble.resx">
       <DependentUpon>201912101439513_BranchPointRateToDouble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912181016124_AddPICToUserForGroomer.resx">
+      <DependentUpon>201912181016124_AddPICToUserForGroomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912181144161_AddShowStatusToUserForGroomer.resx">
+      <DependentUpon>201912181144161_AddShowStatusToUserForGroomer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

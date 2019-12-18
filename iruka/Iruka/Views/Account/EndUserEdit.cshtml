@@ -39,18 +39,18 @@
 
     <script>
         $(document).ready(function () {
-            DefineCertificateSection();
+            DefineGroomerSection();
 
             $('#EndClientEnum').change(function () {
-                DefineCertificateSection();
+                DefineGroomerSection();
             });
         });
 
-        function DefineCertificateSection() {
+        function DefineGroomerSection() {
             if ($('#EndClientEnum').val() == 0) {
-                $('#upload-certificate-section').removeClass('d-none');
+                $('#groomer-section').removeClass('d-none');
             } else {
-                $('#upload-certificate-section').addClass('d-none');
+                $('#groomer-section').addClass('d-none');
             }
         }
 
@@ -145,16 +145,26 @@
                         </div>
                     </div>
 
-                    <div class="form-group row d-none" id="upload-certificate-section">
-                        @Html.LabelFor(m => m.Certificate, new { @class = "col-12 control-label" })
-                        <div class="col-12">
-                            <input type="file" id="certificateUpload" class="form-control" accept=".png, .jpg, .jpeg" />
-                            <div class="certificate-container">
-                                <div id="certificatePreview" style="background-image: url('@Model.Certificate');">
+                    <section id="groomer-section" class="d-none">
+                        <div class="form-group row">
+                            @Html.LabelFor(m => m.PIC, new { @class = "col-12 control-label" })
+                            <div class="col-12">
+                                @Html.TextBoxFor(m => m.PIC, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.PIC, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(m => m.Certificate, new { @class = "col-12 control-label" })
+                            <div class="col-12">
+                                <input type="file" id="certificateUpload" class="form-control" accept=".png, .jpg, .jpeg" />
+                                <div class="certificate-container">
+                                    <div id="certificatePreview" style="background-image: url('@Model.Certificate');">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     <div class="form-group row">
                         <div class="col-12">

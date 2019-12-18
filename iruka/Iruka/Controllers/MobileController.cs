@@ -113,7 +113,9 @@ namespace Iruka.Controllers
                             getUser.Email,
                             getUser.PhoneNumber,
                             getUser.UserName,
-                            role
+                            role,
+                            getUser.PIC,
+                            getUser.Show
                         };
 
                         if (role == "Groomer" || role == "Customer" || role == "Owner")
@@ -209,7 +211,19 @@ namespace Iruka.Controllers
                 {
                     if (um.IsInRole(item.Id, request.Role))
                     {
-                        listUser.Add(new UserDTO { Id = item.Id, Name = item.Name, Email = item.Email, Certificate = item.Certificate, PhoneNumber = item.PhoneNumber, Address = item.Address, Description = item.Description, Picture = item.Picture });
+                        listUser.Add(new UserDTO
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Email = item.Email,
+                            Certificate = item.Certificate,
+                            PhoneNumber = item.PhoneNumber,
+                            Address = item.Address,
+                            Description = item.Description,
+                            Picture = item.Picture,
+                            PIC = item.PIC,
+                            Show = item.Show
+                        });
                     }
                 }
 
@@ -236,6 +250,7 @@ namespace Iruka.Controllers
                 var phonenumber = "";
                 var address = "";
                 var description = "";
+                var pic = "";
 
                 var provider = new CustomMultipartFormDataStreamProvider(root);
                 // Check if the request contains multipart/form-data.
@@ -256,7 +271,7 @@ namespace Iruka.Controllers
                         {
                             if (!Global.CheckAccessKey(val))
                             {
-                                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Wrong access key given, please contact support");
+                                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Global.Message_WrongAccessKey);
                             }
                         }
                         else if (key.Equals("Name"))
@@ -286,6 +301,10 @@ namespace Iruka.Controllers
                         else if (key.Equals("Role"))
                         {
                             role = val;
+                        }
+                        else if (key.Equals("PIC"))
+                        {
+                            pic = val;
                         }
                         else
                         {
@@ -322,7 +341,20 @@ namespace Iruka.Controllers
                 var pathUrl = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
                 var passwordHasher = new PasswordHasher();
 
-                var user = new ApplicationUser { Name = name, UserName = email, Email = email, CreatedDate = DateTime.Now, PasswordHash = passwordHasher.HashPassword(password), PhoneNumber = phonenumber, Address = address, Description = description, Picture = pathUrl };
+                var user = new ApplicationUser
+                {
+                    Name = name,
+                    UserName = email,
+                    Email = email,
+                    CreatedDate = DateTime.Now,
+                    PasswordHash = passwordHasher.HashPassword(password),
+                    PhoneNumber = phonenumber,
+                    Address = address,
+                    Description = description,
+                    Picture = pathUrl,
+                    PIC = pic
+                };
+
                 db.Users.Add(user);
 
                 IdentityUserRole userRole = new IdentityUserRole();
@@ -349,6 +381,7 @@ namespace Iruka.Controllers
                     getUser.Email,
                     getUser.PhoneNumber,
                     getUser.UserName,
+                    getUser.PIC,
                     roleUser
                 };
 
@@ -366,6 +399,179 @@ namespace Iruka.Controllers
             catch (Exception e)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, Global.Message_ErrorMessage);
+            }
+        }
+
+        [HttpPost]
+        public async Task<HttpResponseMessage> EditUserMobile()
+        {
+            try
+            {
+                var db = Global.DB;
+                var root = HttpContext.Current.Server.MapPath("~/Media/");
+                var startingPosition = root.Length - 6;
+                var id = "";
+                var name = "";
+                var phonenumber = "";
+                var address = "";
+                var description = "";
+                var pic = "";
+
+                var provider = new CustomMultipartFormDataStreamProvider(root);
+                // Check if the request contains multipart/form-data.
+                if (!Request.Content.IsMimeMultipartContent())
+                {
+                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                }
+
+                StringBuilder sb = new StringBuilder(); // Holds the response body
+                                                        // Read the form data and return an async task.
+                await Request.Content.ReadAsMultipartAsync(provider);
+                // This illustrates how to get the form data.
+                foreach (var key in provider.FormData.AllKeys)
+                {
+                    foreach (var val in provider.FormData.GetValues(key))
+                    {
+                        if (key.Equals("accessKey"))
+                        {
+                            if (!Global.CheckAccessKey(val))
+                            {
+                                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Global.Message_WrongAccessKey);
+                            }
+                        }
+                        else if (key.Equals("Id"))
+                        {
+                            id = val;
+                        }
+                        else if (key.Equals("Name"))
+                        {
+                            name = val;
+                        }
+                        else if (key.Equals("Phonenumber"))
+                        {
+                            phonenumber = val;
+                        }
+                        else if (key.Equals("Address"))
+                        {
+                            address = val;
+                        }
+                        else if (key.Equals("Description"))
+                        {
+                            description = val;
+                        }
+                        else if (key.Equals("PIC"))
+                        {
+                            pic = val;
+                        }
+                        else
+                        {
+                            sb.Append(string.Format("{0}: {1}\n", key, val));
+                        }
+                    }
+                }
+
+                // This illustrates how to get the file names for uploaded files.
+                foreach (var file in provider.FileData)
+                {
+                    var splitted = file.LocalFileName.Split('\\');
+                    root += "UserPicture\\" + splitted[splitted.Length - 1];
+
+                    try
+                    {
+                        if (File.Exists(root))
+                        {
+                            File.Delete(root);
+                        }
+
+                        File.Move(file.LocalFileName, root);
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        new FileInfo(root).Directory.Create();
+                        File.Move(file.LocalFileName, root);
+                    }
+
+                    FileInfo fileInfo = new FileInfo(file.LocalFileName);
+                    sb.Append(string.Format("{0}", root));
+                }
+
+                var pathUrl = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
+
+                var targetUser = db.Users.SingleOrDefault(x => x.Id == id);
+                targetUser.Name = name;
+                targetUser.PhoneNumber = phonenumber;
+                targetUser.Address = name;
+                targetUser.Description = description;
+                targetUser.PIC = pic;
+
+                db.SaveChanges();
+
+                var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var roleUser = um.GetRoles(targetUser.Id).FirstOrDefault();
+
+                var User = new
+                {
+                    targetUser.Id,
+                    targetUser.Name,
+                    targetUser.Certificate,
+                    targetUser.Description,
+                    targetUser.Address,
+                    targetUser.Picture,
+                    targetUser.IsActive,
+                    targetUser.CreatedDate,
+                    targetUser.Email,
+                    targetUser.PhoneNumber,
+                    targetUser.UserName,
+                    targetUser.PIC,
+                    roleUser
+                };
+
+                return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
+
+            }
+            catch (NullReferenceException)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, Global.Message_ErrorMessage);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Global.Message_ErrorMessage);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, Global.Message_ErrorMessage);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult ChangeGroomerShowStatus([FromUri] string userId, bool status)
+        {
+            try
+            {
+                if (Global.CheckAccessKey(Global.GetAccessKeyFromHeader(Request)))
+                {
+                    var targetUser = db.Users.SingleOrDefault(x => x.Id == userId);
+                    targetUser.Show = status;
+                    db.SaveChanges();
+
+                    return Ok("Action successful!");
+                }
+                else
+                {
+                    return BadRequest(Global.Message_WrongAccessKey);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return BadRequest(Global.Message_NoData);
+            }
+            catch (AccessViolationException)
+            {
+                return BadRequest(Global.Message_NoAccessKey);
+            }
+            catch (Exception)
+            {
+                return BadRequest(Global.Message_ErrorMessage);
             }
         }
     }

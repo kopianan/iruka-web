@@ -15,11 +15,12 @@ namespace Iruka.DAL
     public class Global
     {
         private static readonly string AccessKey = "d78c1a5c-ccbe-4c26-ac08-43ed66c8afb9";
-        public static readonly string Message_ErrorMessage = "Error processing your request, Please contact support!";
+        public static readonly string Message_ErrorMessage = "Error processing your request, please contact support!";
         public static readonly string Message_WrongPassword = "Wrong Username or Password";
         public static readonly string Message_NoAccessKey = "No access key given !";
         public static readonly string Message_WrongAccessKey = "Wrong access key given, please update your software.";
         public static readonly string Message_SuccessMessage = "Process finished succesfully";
+        public static readonly string Message_NoData = "Can't update null data!";
 
         public static IList<string> GetUserRole(string userId)
         {
