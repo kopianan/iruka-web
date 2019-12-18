@@ -12,7 +12,7 @@ let txtSubTotal = new Cleave("#SubTotal", {
 });
 
 $(document).ready(function () {
-    $("#btn-input-scan").focus();
+    $("#scan-result").focus();
     InitTransactionHistoryGrid();
     InitPurchaseableCouponsGrid();
 });

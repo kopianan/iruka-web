@@ -280,10 +280,21 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="location.href='@Url.Action("Create", "Transactions")'" style="cursor:pointer">
-                            <i class="menu-icon typcn typcn-document-text"></i>
+                        <a class="nav-link" data-toggle="collapse" href="#finance" aria-expanded="false" aria-controls="finance">
+                            <i class="menu-icon typcn typcn-document-add"></i>
                             <span class="menu-title">Finance</span>
+                            <i class="menu-arrow"></i>
                         </a>
+                        <div class="collapse" id="finance">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item" style="cursor:pointer">
+                                    <a class="nav-link" onclick="location.href='@Url.Action("Create", "Transactions")'"> Create Transaction </a>
+                                </li>
+                                <li class="nav-item" style="cursor:pointer">
+                                    <a class="nav-link" onclick="location.href='@Url.Action("Index", "Transactions")'"> Transaction History </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </nav>

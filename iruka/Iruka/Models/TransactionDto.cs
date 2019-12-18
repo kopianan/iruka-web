@@ -15,5 +15,6 @@ namespace Iruka.Models
         public double Total { get; set; }
         public string Notes { get; set; }
         public int EarnedPoint { get; set; }
+        public string CustomerName { get; set; }
     }
 }

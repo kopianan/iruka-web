@@ -62,6 +62,25 @@
 
     }
 
+    global.prototype.InitDatePicker = function ($elems, option) {
+
+        option = option != undefined ? option : {};
+
+        let { value } = option;
+
+
+        if ($elems.length > 0) {
+
+            $elems.kendoDatePicker({
+                format: "dd-MM-yyyy",
+                dateInput: true,
+                value: value != undefined ? value : "day-month-year"
+            });
+
+        }
+
+    }
+
     // instantiate the object
     var globalInstance = new global();
     // expose the object

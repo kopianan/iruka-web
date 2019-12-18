@@ -22,5 +22,11 @@
     "inputFiles": [
       "Scripts/js/global.js"
     ]
+  },
+  {
+    "outputFileName": "Css/report.min.css",
+    "inputFiles": [
+      "Css/report.css"
+    ]
   }
 ]

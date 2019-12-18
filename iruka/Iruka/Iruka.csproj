@@ -191,6 +191,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\EventController.cs" />
     <Compile Include="Controllers\API\ProductController.cs" />
+    <Compile Include="Controllers\API\ReportController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
@@ -250,6 +251,10 @@
     </Content>
     <Content Include="Css\avatar-upload.min.css">
       <DependentUpon>avatar-upload.css</DependentUpon>
+    </Content>
+    <Content Include="Css\report.css" />
+    <Content Include="Css\report.min.css">
+      <DependentUpon>report.css</DependentUpon>
     </Content>
     <Content Include="Css\toastr.css">
       <DependentUpon>toastr.scss</DependentUpon>
@@ -499,6 +504,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\js\cleave.min.js" />
     <Content Include="Scripts\js\coupon.js" />
     <Content Include="Scripts\js\event.js" />

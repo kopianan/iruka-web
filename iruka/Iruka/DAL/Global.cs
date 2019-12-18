@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -134,6 +135,10 @@ namespace Iruka.DAL
                 return "No Data";
             }
         }
+
+        public static DateTime ParseStringToDate(string dateInString, string formatDate = "dd-MM-yyyy") =>
+            DateTime.ParseExact(dateInString, formatDate, CultureInfo.InvariantCulture);
+
         public static ApplicationDbContext DB
         {
             get { return new ApplicationDbContext(); }

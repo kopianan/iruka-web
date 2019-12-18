@@ -1,57 +1,198 @@
-﻿@model IEnumerable<Iruka.EF.Model.Transaction>
-
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@section css {
+    <link href="~/css/kendo.bootstrap-v4.min.css" rel="stylesheet" />
+    <link href="~/Css/report.min.css" rel="stylesheet" />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ServiceType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Point)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ServiceType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Point)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+    <style>
+        div.mobile-restriction {
+            display: none;
+        }
+    </style>
 }
 
-</table>
+@section js {
+    <script src="~/Scripts/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2019.1.220/js/pako_deflate.min.js"></script>
+    <script type="x/kendo-template" id="page-template">
+        <div class="page-template">
+            <div class="header">
+                Riwayat Transaksi - SS Tour
+            </div>
+            <div class="footer">
+                Halaman #: pageNum # dari #: totalPages #
+            </div>
+        </div>
+    </script>
+    <script>
+        let transactionHistoryGrid = $('#transaction-history-grid');
+        var flagInit = true;
+
+        $(document).ready(function () {
+            Global.InitDatePicker($('.datepicker'));
+            InitTransactionHistoryGrid();
+
+            if (window.matchMedia("(max-width: 575px)").matches) {
+                SetGridHeight(transactionHistoryGrid, 500);
+            }
+        });
+
+        function SetGridHeight(grid, height) {
+
+            let gridInstance = grid.data("kendoGrid");
+
+            gridInstance.setOptions({
+                height: height
+            });
+
+        }
+
+        function InitTransactionHistoryGrid() {
+            var transactionHistoryDataSource = new kendo.data.DataSource
+                ({
+                    transport: {
+                        read: function (options) {
+                            var filterStartDate = $('#txt-date-start').val();
+                            var filterEndDate = $('#txt-date-end').val();
+                            var data = [];
+
+                            if (!flagInit) {
+                                $.ajax({
+                                    url: `/api/Report/GetFilterableTransactionHistory?startDate=${filterStartDate}&endDate=${filterEndDate}`,
+                                    method: "GET",
+                                    dataType: "json",
+                                    contentType: "application/json",
+                                    async: false,
+                                    success: function (response) {
+                                        data = response;
+                                    },
+                                    error: function (response) {
+                                        let { responseJSON } = response;
+
+                                        toastr.error(`There has been an error retrieving data from the server! Exception: ${responseJSON.ExceptionMessage}`);
+                                    }
+                                });
+                            }
+
+                            options.success(data);
+                        }
+                    },
+                    page: 1,
+                    pageSize: 20,
+                    batch: true
+                });
+            var option = {};
+            option.toolbar = ["excel"];
+            option.pdf = {
+                allPages: true,
+                avoidLinks: true,
+                paperSize: "A4",
+                margin: { top: "2cm", left: "1cm", right: "1cm", bottom: "1cm" },
+                landscape: true,
+                repeatHeaders: false,
+                template: $("#page-template").html(),
+                scale: 0.8,
+                fileName: "Transaction History - Iruka"
+            };
+            option.excel = {
+                fileName: "Transaction History - Iruka.xlsx",
+                allPages: true
+            };
+            option.excelExport = function (e) {
+                var columns = e.workbook.sheets[0].columns;
+
+                columns.forEach(function (column) {
+                    delete column.width;
+                    column.autoWidth = true;
+                });
+            };
+            option.pageable = {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            };
+            option.dataSource = transactionHistoryDataSource;
+            option.height = 750;
+            option.selectable = true;
+            option.editable = false;
+            option.columns = [
+                {
+                    field: "CreatedDate",
+                    title: "Date"
+                }, {
+                    field: "CustomerName",
+                    title: "Customer"
+                }, {
+                    field: "SubTotal",
+                    title: "Shopping Total",
+                    format: "Rp. {0:N0}"
+                }, {
+                    field: "CouponValue",
+                    title: "Coupon Usage"
+                }, {
+                    field: "Total",
+                    format: "Rp. {0:N0}"
+                }, {
+                    field: "EarnedPoint",
+                    title: "Earned Points"
+                }, {
+                    field: "Notes",
+                    title: "Notes"
+                }
+            ];
+            option.dataBound = function () {
+                if (window.matchMedia("(max-width: 1199px)").matches) {
+                    for (var i = 0; i < this.columns.length; i++) {
+                        this.autoFitColumn(i);
+                    }
+                }
+                else {
+                    for (var i = 0; i < this.columns.length; i++) {
+                        this.resizeColumn(this.columns[i], `${(100 / this.columns.length)}%`)
+                    }
+                }
+            };
+            Global.InitGrid(transactionHistoryGrid, option);
+        }
+
+        function FilterData() {
+            var grid = transactionHistoryGrid.data('kendoGrid');
+
+            flagInit = false;
+            grid.dataSource.read();
+            grid.refresh();
+        }
+
+        /**/</script>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h2>Transaction History</h2>
+                <hr />
+                <div class="form-group row">
+                    @Html.Label("From", new { @class = "col-12 col-lg-1 col-form-label" })
+                    <div class="col-12 col-lg-3">
+                        @Html.TextBox("txt-date-start", null, new { @class = "form-control datepicker", @id = "txt-date-start" })
+                    </div>
+                    @Html.Label("Until", new { @class = "col-12 col-lg-1 col-form-label" })
+                    <div class="col-12 col-lg-3">
+                        @Html.TextBox("txt-date-end", null, new { @class = "form-control datepicker", @id = "txt-date-end" })
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <button type="button" class="btn btn-success" onclick="FilterData()" style="display: block; width: 100%">
+                            <span class="font-weight-bold text-white" style="padding-left: 20px; padding-right: 10px">SEARCH</span>
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="transaction-history-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>

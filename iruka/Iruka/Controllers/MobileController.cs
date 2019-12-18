@@ -503,6 +503,7 @@ namespace Iruka.Controllers
                 targetUser.Address = name;
                 targetUser.Description = description;
                 targetUser.PIC = pic;
+                targetUser.Picture = pathUrl;
 
                 db.SaveChanges();
 
