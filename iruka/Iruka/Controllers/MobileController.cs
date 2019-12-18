@@ -113,9 +113,9 @@ namespace Iruka.Controllers
                             getUser.Email,
                             getUser.PhoneNumber,
                             getUser.UserName,
-                            role,
                             getUser.PIC,
-                            getUser.Show
+                            getUser.Show,
+                            role
                         };
 
                         if (role == "Groomer" || role == "Customer" || role == "Owner")
@@ -338,7 +338,7 @@ namespace Iruka.Controllers
                     sb.Append(string.Format("{0}", root));
                 }
 
-                var pathUrl = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
+                var pathUrl = provider.FileData.Count() == 0 ? null : Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
                 var passwordHasher = new PasswordHasher();
 
                 var user = new ApplicationUser
@@ -382,7 +382,8 @@ namespace Iruka.Controllers
                     getUser.PhoneNumber,
                     getUser.UserName,
                     getUser.PIC,
-                    roleUser
+                    getUser.Show,
+                    role = roleUser
                 };
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
@@ -416,6 +417,7 @@ namespace Iruka.Controllers
                 var address = "";
                 var description = "";
                 var pic = "";
+                var show = "";
 
                 var provider = new CustomMultipartFormDataStreamProvider(root);
                 // Check if the request contains multipart/form-data.
@@ -463,6 +465,10 @@ namespace Iruka.Controllers
                         {
                             pic = val;
                         }
+                        else if (key.Equals("Show"))
+                        {
+                            show = val;
+                        }
                         else
                         {
                             sb.Append(string.Format("{0}: {1}\n", key, val));
@@ -495,15 +501,19 @@ namespace Iruka.Controllers
                     sb.Append(string.Format("{0}", root));
                 }
 
-                var pathUrl = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
-
                 var targetUser = db.Users.SingleOrDefault(x => x.Id == id);
                 targetUser.Name = name;
                 targetUser.PhoneNumber = phonenumber;
-                targetUser.Address = name;
+                targetUser.Address = address;
                 targetUser.Description = description;
                 targetUser.PIC = pic;
-                targetUser.Picture = pathUrl;
+                
+                if (provider.FileData.Count() > 0)
+                {
+                    targetUser.Picture = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
+                }
+
+                targetUser.Show = show == "true" ? true : false;
 
                 db.SaveChanges();
 
@@ -524,7 +534,8 @@ namespace Iruka.Controllers
                     targetUser.PhoneNumber,
                     targetUser.UserName,
                     targetUser.PIC,
-                    roleUser
+                    targetUser.Show,
+                    role = roleUser
                 };
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
