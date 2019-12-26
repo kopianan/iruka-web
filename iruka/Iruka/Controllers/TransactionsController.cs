@@ -32,6 +32,8 @@ namespace Iruka.Controllers
 
             return View(new TransactionDto
             {
+                CustomerId = null,
+                CouponId = null,
                 TransactionTypeOptions = TransactionDal.GetTransactionTypes()
             });
         }

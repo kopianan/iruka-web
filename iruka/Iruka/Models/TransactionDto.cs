@@ -8,7 +8,7 @@ namespace Iruka.Models
 {
     public class TransactionDto : BaseEntityDto
     {
-        public Guid CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
         public Guid? CouponId { get; set; }
         public string CouponValue { get; set; }
         public double SubTotal { get; set; }
