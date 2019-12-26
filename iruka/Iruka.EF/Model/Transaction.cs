@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.EF.Model
 {
@@ -15,5 +16,6 @@ namespace Iruka.EF.Model
         public double Total { get; set; }
         public string Notes { get; set; }
         public int EarnedPoint { get; set; }
+        public string TransactionType { get; set; }
     }
 }

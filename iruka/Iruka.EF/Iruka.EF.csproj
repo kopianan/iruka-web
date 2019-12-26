@@ -151,6 +151,10 @@
     <Compile Include="Migrations\201912181144161_AddShowStatusToUserForGroomer.Designer.cs">
       <DependentUpon>201912181144161_AddShowStatusToUserForGroomer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912260647394_AddTransactionType.cs" />
+    <Compile Include="Migrations\201912260647394_AddTransactionType.Designer.cs">
+      <DependentUpon>201912260647394_AddTransactionType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\BaseEntity.cs" />
     <Compile Include="Model\Branch.cs" />
@@ -237,6 +241,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912181144161_AddShowStatusToUserForGroomer.resx">
       <DependentUpon>201912181144161_AddShowStatusToUserForGroomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912260647394_AddTransactionType.resx">
+      <DependentUpon>201912260647394_AddTransactionType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

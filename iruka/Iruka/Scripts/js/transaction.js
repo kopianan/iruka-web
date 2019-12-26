@@ -11,6 +11,8 @@ let txtSubTotal = new Cleave("#SubTotal", {
     delimiter: '.'
 });
 
+let transactionTypesHolder = [];
+
 $(document).ready(function () {
     $("#scan-result").focus();
     InitTransactionHistoryGrid();
@@ -76,6 +78,9 @@ function InitTransactionHistoryGrid() {
         {
             field: "CreatedDate",
             title: "Date"
+        }, {
+            field: "TransactionType",
+            title: "Transaction Type"
         }, {
             field: "SubTotal",
             title: "Shopping Total",
@@ -229,8 +234,16 @@ function confirmSubmit(form) {
                         if ($('#Total').val() <= 0) {
                             toastr.error('Please input transaction amount!');
                         } else {
-                            $('#SubTotal').val(txtSubTotal.getRawValue());
-                            form.submit();
+                            if ($("input[name='transaction-types']:checked").length == 0) {
+                                toastr.error('Please fill transaction type!');
+                            } else {
+                                $('#SubTotal').val(txtSubTotal.getRawValue());
+                                $.each($("input[name='transaction-types']:checked"), function () {
+                                    transactionTypesHolder.push($(this).val());
+                                });
+                                $('#TransactionType').val(transactionTypesHolder.join(', '));
+                                form.submit();
+                            }
                         }
                     }
                 }

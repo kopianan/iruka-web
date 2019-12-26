@@ -16,5 +16,7 @@ namespace Iruka.Models
         public string Notes { get; set; }
         public int EarnedPoint { get; set; }
         public string CustomerName { get; set; }
+        public string TransactionType { get; set; }
+        public List<string> TransactionTypeOptions { get; set; }
     }
 }

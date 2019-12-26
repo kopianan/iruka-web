@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.DAL
 {
@@ -61,6 +62,11 @@ namespace Iruka.DAL
             }
 
             return listToReturn;
+        }
+
+        public static List<string> GetTransactionTypes()
+        {
+            return System.Enum.GetNames(typeof(TransactionType)).ToList();
         }
 
         public class CustomerDataDto

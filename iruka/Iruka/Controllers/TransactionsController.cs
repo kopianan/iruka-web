@@ -12,6 +12,8 @@ using Iruka.EF.Model;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
 using static Iruka.DAL.TransactionDal;
+using static Iruka.EF.Model.Enum;
+using Enum = System.Enum;
 
 namespace Iruka.Controllers
 {
@@ -26,7 +28,12 @@ namespace Iruka.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.UserId = User.Identity.GetUserId(); return View();
+            ViewBag.UserId = User.Identity.GetUserId();
+
+            return View(new TransactionDto
+            {
+                TransactionTypeOptions = TransactionDal.GetTransactionTypes()
+            });
         }
 
         [HttpPost]

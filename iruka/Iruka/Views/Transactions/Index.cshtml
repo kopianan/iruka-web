@@ -122,6 +122,9 @@
                     field: "CreatedDate",
                     title: "Date"
                 }, {
+                    field: "TransactionType",
+                    title: "Transaction Type"
+                }, {
                     field: "CustomerName",
                     title: "Customer"
                 }, {
@@ -143,7 +146,7 @@
                 }
             ];
             option.dataBound = function () {
-                if (window.matchMedia("(max-width: 1199px)").matches) {
+                if (window.matchMedia("(max-width: 1366px)").matches) {
                     for (var i = 0; i < this.columns.length; i++) {
                         this.autoFitColumn(i);
                     }

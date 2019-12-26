@@ -76,6 +76,7 @@
     @Html.HiddenFor(model => model.CustomerId, new { id = "CustomerId" })
     @Html.HiddenFor(model => model.CouponId, new { id = "CouponId" })
     @Html.HiddenFor(model => model.Total, new { id = "Total" })
+    @Html.HiddenFor(model => model.TransactionType, new { id = "TransactionType" })
 
     <div class="row">
         <div class="col-12">
@@ -197,6 +198,20 @@
                                     <div class="col-12 mt-3 text-center">
                                         <img src="~/Media/payment.png" alt="TOTAL" class="mr-3" style="width: 35px; height: 35px" />
                                         <label id="lbl-invoice-total" class="font-weight-bold" style="color: #2F6EB1 !important">Rp. 0</label>
+                                    </div>
+
+                                    <div class="col-12 mt-5">
+                                        <div class="row">
+                                            @foreach (var option in Model.TransactionTypeOptions)
+                                            {
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                                        <input type="checkbox" name="transaction-types" value="@option" class="custom-control-input" id="@option">
+                                                        <label class="custom-control-label" for="@option">@option</label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
 
                                     <div class="col-12 mt-3 mb-3">

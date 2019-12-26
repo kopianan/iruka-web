@@ -55,5 +55,15 @@ namespace Iruka.EF.Model
             Discount,
             Product
         }
+
+        public enum TransactionType
+        {
+            Shop,
+            Salon,
+            Hotel,
+            [Display(Name = "Vet Corner")]
+            VetCorner,
+            Others
+        }
     }
 }
