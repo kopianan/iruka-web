@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Iruka.EF.Model;
 using System;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.Models
 {
@@ -19,8 +20,21 @@ namespace Iruka.Models
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Points { get; set; }
+
+        //Groomer
         public string PIC { get; set; }
         public bool Show { get; set; }
+        public int YearsOfExperience { get; set; }
+        public bool Availability { get; set; }
+        public GroomerRating Styling { get; set; }
+        public GroomerRating Clipping { get; set; }
+        public string KeyFeatures { get; set; }
+        public string CoverageArea { get; set; }
+
+        //Groomer Training Data
+        public DateTime? TrainingStartDate { get; set; }
+        public int TrainingYears { get; set; }
+        public string TrainingCourses { get; set; }
 
         public ApplicationUser()
         {

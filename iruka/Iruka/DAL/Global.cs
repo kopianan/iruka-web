@@ -1,6 +1,7 @@
 ﻿using Iruka.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
+using System.Web.Script.Serialization;
 using static Iruka.EF.Model.Enum;
 
 namespace Iruka.DAL
@@ -139,9 +141,50 @@ namespace Iruka.DAL
         public static DateTime ParseStringToDate(string dateInString, string formatDate = "dd-MM-yyyy") =>
             DateTime.ParseExact(dateInString, formatDate, CultureInfo.InvariantCulture);
 
+        public static List<object> GetAllCitiesOfIndonesia()
+        {
+            var toReturn = new List<object>();
+            var client = new RestClient("http://pro.rajaongkir.com/api/city");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("key", "d1534a4407fa84006019516410b55d5f");
+            IRestResponse result = client.Execute(request);
+            var response = new JavaScriptSerializer().Deserialize<LayerObject>(result.Content);
+            var cityList = response.rajaongkir.results.ToList();
+
+            foreach (var city in cityList)
+            {
+                toReturn.Add(new
+                {
+                    Values = city.type + " " + city.city_name + ", " + city.province
+                });
+            }
+
+            return toReturn;
+        }
+
         public static ApplicationDbContext DB
         {
             get { return new ApplicationDbContext(); }
+        }
+
+        public class LayerObject
+        {
+            public RootObject rajaongkir { get; set; }
+        }
+
+        public class RootObject
+        {
+            public object query { get; set; }
+            public object status { get; set; }
+            public List<CityObject> results { get; set; }
+        }
+
+        public class CityObject
+        {
+            public string type { get; set; }
+            public string province { get; set; }
+            public string city_name { get; set; }
         }
     }
 }

@@ -72,7 +72,7 @@
     @Html.HiddenFor(m => m.Base64URLCertificate, new { @id = "Base64URLCertificate" })
 
     <div class="row">
-        <div class="col-6 grid-margin stretch-card">
+        <div class="col-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <h2>
@@ -80,91 +80,184 @@
                         <a href="/Account/EndUserRegister/"><i class="fa fa-arrow-circle-left float-right" aria-hidden="true"></i></a>
                     </h2>
                     <hr />
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <div class="avatar-upload">
-                                <div class="avatar-edit">
-                                    <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
-                                    <label for="imageUpload"></label>
-                                </div>
-                                <div class="avatar-preview">
-                                    @{
-                                        if (Model.Picture == null || Model.Picture == String.Empty)
-                                        {
-                                            <div id="imagePreview" style="background-image: url('/Media/avatar-placeholder.png');">
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div id="imagePreview" style="background-image: url('@Model.Picture');">
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(m => m.EndClientEnum, new { @class = "col-12 control-label" })
-                        <div class="col-12">
-                            @Html.EnumDropDownListFor(m => m.EndClientEnum, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.EndClientEnum, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-12" })
-                        <div class="col-12">
-                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-12" })
-                        <div class="col-12">
-                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-12" })
-                        <div class="col-12">
-                            @Html.TextAreaFor(model => model.Address, htmlAttributes: new { @class = "form-control", rows = 2 })
-                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-12" })
-                        <div class="col-12">
-                            @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control", rows = 2 })
-                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <section id="groomer-section" class="d-none">
-                        <div class="form-group row">
-                            @Html.LabelFor(m => m.PIC, new { @class = "col-12 control-label" })
-                            <div class="col-12">
-                                @Html.TextBoxFor(m => m.PIC, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.PIC, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            @Html.LabelFor(m => m.Certificate, new { @class = "col-12 control-label" })
-                            <div class="col-12">
-                                <input type="file" id="certificateUpload" class="form-control" accept=".png, .jpg, .jpeg" />
-                                <div class="certificate-container">
-                                    <div id="certificatePreview" style="background-image: url('@Model.Certificate');">
+                    
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUpload"></label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            @{
+                                                if (Model.Picture == null || Model.Picture == String.Empty)
+                                                {
+                                                    <div id="imagePreview" style="background-image: url('/Media/avatar-placeholder.png');">
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div id="imagePreview" style="background-image: url('@Model.Picture');">
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(m => m.EndClientEnum, new { @class = "col-12 control-label" })
+                                <div class="col-12">
+                                    @Html.EnumDropDownListFor(m => m.EndClientEnum, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.EndClientEnum, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-12" })
+                                <div class="col-12">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-12" })
+                                <div class="col-12">
+                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-12" })
+                                <div class="col-12">
+                                    @Html.TextAreaFor(model => model.Address, htmlAttributes: new { @class = "form-control", rows = 2 })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-12" })
+                                <div class="col-12">
+                                    @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control", rows = 2 })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
                         </div>
-                    </section>
+
+                        <div id="groomer-section" class="col-12 d-none">
+                            <div class="row">
+                                <div class="col-lg-6 col-12">
+                                    <fieldset>
+                                        <legend>Groomer Information</legend>
+                                        <hr />
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.Certificate, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                <input type="file" id="certificateUpload" class="form-control" accept=".png, .jpg, .jpeg" />
+                                                <div class="certificate-container">
+                                                    <div id="certificatePreview" style="background-image: url('@Model.Certificate');">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.PIC, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.PIC, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.PIC, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.Styling, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.EnumDropDownListFor(m => m.Styling, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.Styling, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.Clipping, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.EnumDropDownListFor(m => m.Clipping, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.Clipping, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.YearsOfExperience, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.YearsOfExperience, new { @class = "form-control", @type = "number" })
+                                                @Html.ValidationMessageFor(m => m.YearsOfExperience, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.KeyFeatures, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.KeyFeatures, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.KeyFeatures, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.CoverageArea, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.CoverageArea, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.CoverageArea, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <div class="custom-control custom-checkbox custom-control-inline">
+                                                    <input type="checkbox" name="Availability" class="custom-control-input" value="true" id="Availability">
+                                                    <label class="custom-control-label" for="Availability" style="padding-top: 4px">Availability</label>
+                                                </div>
+                                                @Html.ValidationMessageFor(m => m.Availability, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <div class="col-lg-6 col-12">
+                                    <fieldset>
+                                        <legend>Training at Vivianna’s Grooming School</legend>
+                                        <hr />
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.TrainingStartDateString, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.TrainingStartDateString, new { @class = "form-control datepicker" })
+                                                @Html.ValidationMessageFor(m => m.TrainingStartDateString, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.TrainingYears, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.TrainingYears, new { @class = "form-control", @type = "number" })
+                                                @Html.ValidationMessageFor(m => m.TrainingYears, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(m => m.TrainingCourses, new { @class = "col-12 control-label" })
+                                            <div class="col-12">
+                                                @Html.TextAreaFor(m => m.TrainingCourses, new { @class = "form-control", rows = 2 })
+                                                @Html.ValidationMessageFor(m => m.TrainingCourses, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group row">
                         <div class="col-12">
