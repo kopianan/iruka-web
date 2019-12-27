@@ -56,7 +56,9 @@ namespace Iruka.Controllers
                     UserName = userDTO.Email,
                     Description = userDTO.Description ?? "",
                     CreatedDate = DateTime.Now,
-                    PIC = userDTO.PIC ?? ""
+                    PIC = userDTO.PIC ?? "",
+                    KeyFeatures = userDTO.KeyFeatures ?? "",
+                    CoverageArea = userDTO.CoverageArea ?? ""
                 };
                 var result = await UserManager.CreateAsync(newUser, userDTO.Password);
 
@@ -123,8 +125,27 @@ namespace Iruka.Controllers
                     UserName = userDTO.Email,
                     Description = userDTO.Description ?? "",
                     CreatedDate = DateTime.Now,
-                    PIC = userDTO.PIC ?? ""
+
+                    //Groomer
+                    PIC = userDTO.PIC ?? "",
+                    KeyFeatures = userDTO.KeyFeatures ?? "",
+                    CoverageArea = userDTO.CoverageArea ?? "",
+                    YearsOfExperience = userDTO.YearsOfExperience ?? 0,
+                    Availability = userDTO.Availability,
+                    Styling = userDTO.Clipping,
+                    Clipping = userDTO.Clipping,
+                    TrainingYears = userDTO.TrainingYears ?? 0,
+                    TrainingCourses = userDTO.TrainingCourses
                 };
+
+                try
+                {
+                    newUser.TrainingStartDate = Global.ParseStringToDate(userDTO.TrainingStartDateString);
+                }
+                catch (FormatException)
+                {
+                }
+
                 var result = await UserManager.CreateAsync(newUser, userDTO.Password);
 
                 if (result.Succeeded)
@@ -209,6 +230,8 @@ namespace Iruka.Controllers
             targetUser.Address = userDTO.Address;
             targetUser.Description = userDTO.Description;
             targetUser.PIC = userDTO.PIC ?? "";
+            targetUser.KeyFeatures = userDTO.KeyFeatures ?? "";
+            targetUser.CoverageArea = userDTO.CoverageArea ?? "";
 
             if (targetUser.Picture != userDTO.Picture)
             {
@@ -264,7 +287,25 @@ namespace Iruka.Controllers
             targetUser.PhoneNumber = userDTO.PhoneNumber;
             targetUser.Address = userDTO.Address;
             targetUser.Description = userDTO.Description;
+
+            //Groomer
             targetUser.PIC = userDTO.PIC ?? "";
+            targetUser.KeyFeatures = userDTO.KeyFeatures ?? "";
+            targetUser.CoverageArea = userDTO.CoverageArea ?? "";
+            targetUser.YearsOfExperience = userDTO.YearsOfExperience ?? 0;
+            targetUser.Availability = userDTO.Availability;
+            targetUser.Styling = userDTO.Styling;
+            targetUser.Clipping = userDTO.Clipping;
+            targetUser.TrainingYears = userDTO.TrainingYears ?? 0;
+            targetUser.TrainingCourses = userDTO.TrainingCourses;
+
+            try
+            {
+                targetUser.TrainingStartDate = Global.ParseStringToDate(userDTO.TrainingStartDateString);
+            }
+            catch (FormatException)
+            {
+            }
 
             if (targetUser.Picture != userDTO.Picture)
             {

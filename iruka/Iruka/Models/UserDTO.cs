@@ -50,7 +50,30 @@ namespace Iruka.Models
         public string Role { get; set; }
         public string Base64URLCertificate { get; set; }
         public string CreatedDate { get; set; }
+
+        //Groomer
         public string PIC { get; set; }
         public bool Show { get; set; }
+
+        [Display(Name = "Years of Experience")]
+        public int? YearsOfExperience { get; set; }
+        public bool Availability { get; set; }
+        public GroomerRating Styling { get; set; }
+        public GroomerRating Clipping { get; set; }
+
+        [Display(Name = "Key Features")]
+        public string KeyFeatures { get; set; }
+
+        [Display(Name = "Coverage Area")]
+        public string CoverageArea { get; set; }
+
+        [Display(Name = "When ?")]
+        public string TrainingStartDateString { get; set; }
+
+        [Display(Name = "How Long ?")]
+        public int? TrainingYears { get; set; }
+
+        [Display(Name = "What Courses ?")]
+        public string TrainingCourses { get; set; }
     }
 }

@@ -65,5 +65,13 @@ namespace Iruka.EF.Model
             VetCorner,
             Others
         }
+
+        public enum GroomerRating
+        {
+            Beginning,
+            Middle,
+            Good,
+            Excellent
+        }
     }
 }
