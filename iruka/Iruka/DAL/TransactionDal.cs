@@ -4,7 +4,6 @@ using Iruka.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using static Iruka.EF.Model.Enum;
 
 namespace Iruka.DAL

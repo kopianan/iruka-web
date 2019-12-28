@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Iruka.Models
+﻿namespace Iruka.Models
 {
     public class RoleList
     {
@@ -11,7 +6,7 @@ namespace Iruka.Models
 
         public const string Admin = "Admin";
         public const string Groomer = "Groomer";
-        public const string Owner = "Owner";
+        public const string Salon = "Salon";
         public const string ContentManager = "ContentManager";
         public const string Finance = "Finance";
         public const string Customer = "Customer";

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
 using Iruka.DAL;
 using Iruka.EF.Model;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web.Mvc;
 using static Iruka.DAL.TransactionDal;
-using static Iruka.EF.Model.Enum;
-using Enum = System.Enum;
 
 namespace Iruka.Controllers
 {
@@ -70,7 +65,7 @@ namespace Iruka.Controllers
                 customerDataDto.PurchaseableCoupons = new List<CouponDto>();
 
                 if (Global.CheckIfUserInRole(
-                    Global.GetUserRole(targetCustomer.Id), new List<string> { RoleList.Customer, RoleList.Groomer, RoleList.Owner }))
+                    Global.GetUserRole(targetCustomer.Id), new List<string> { RoleList.Customer, RoleList.Groomer, RoleList.Salon }))
                 {
                     var guidCustomerId = Guid.Parse(targetCustomer.Id);
                     var purchaseableCoupons = db.Coupons.Where(x

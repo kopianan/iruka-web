@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Iruka.Models;
+﻿using Iruka.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static Iruka.EF.Model.Enum;
 
 namespace Iruka.DAL
@@ -29,7 +28,7 @@ namespace Iruka.DAL
                             Id = user.Id,
                             Name = user.Name,
                             Email = user.Email,
-                            Picture = user.Picture,                            
+                            Picture = user.Picture,
                             Certificate = user.Certificate,
                             PhoneNumber = user.PhoneNumber,
                             Address = user.Address,

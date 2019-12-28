@@ -1,20 +1,9 @@
-﻿using System;
+﻿using Iruka.Models;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Iruka.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using System.Security.Claims;
-using Iruka.DAL;
-using System.IO;
-using System.Drawing;
 
 namespace Iruka.Controllers
 {

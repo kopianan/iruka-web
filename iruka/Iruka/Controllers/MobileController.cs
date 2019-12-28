@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using Iruka.DAL;
-using Iruka.EF.Model;
+﻿using Iruka.DAL;
 using Iruka.ModelAPI;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -507,7 +504,7 @@ namespace Iruka.Controllers
                 targetUser.Address = address;
                 targetUser.Description = description;
                 targetUser.PIC = pic;
-                
+
                 if (provider.FileData.Count() > 0)
                 {
                     targetUser.Picture = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);

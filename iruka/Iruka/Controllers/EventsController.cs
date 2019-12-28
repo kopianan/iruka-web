@@ -1,18 +1,17 @@
-﻿using System;
+﻿using AutoMapper;
+using Iruka.DAL;
+using Iruka.EF.Model;
+using Iruka.Models;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
-using Iruka.DAL;
-using Iruka.EF.Model;
-using Iruka.Models;
-using Microsoft.AspNet.Identity;
 using static Iruka.EF.Model.Enum;
 
 namespace Iruka.Controllers
