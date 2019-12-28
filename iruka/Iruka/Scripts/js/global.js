@@ -81,6 +81,33 @@
 
     }
 
+    global.prototype.InitKendoAutoComplete = function ($elems, options) {
+        /*
+         * InitGrid - option object
+         * ========================
+         * options {
+         * 
+         * data: {arrayofobject},
+         * columns: {arrayofobject}
+         * 
+         * }
+         */
+        options = options == undefined ? {} : options;
+
+        let { dataSource, dataTextField, change, select, placeholder } = options;
+
+        $elems.kendoAutoComplete({
+            dataSource: dataSource ? dataSource : [],
+            minLength: 1,
+            autoWidth: true,
+            dataTextField: dataTextField != undefined ? dataTextField : "Value",
+            filter: "contains",
+            placeholder: placeholder ? placeholder : "Select item here...",
+            change: change != undefined ? change : function (e) { },
+            select: select != undefined ? select : function (e) { }
+        });
+    }
+    
     // instantiate the object
     var globalInstance = new global();
     // expose the object

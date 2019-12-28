@@ -39,7 +39,12 @@
 
     <script>
         $(document).ready(function () {
+            Global.InitDatePicker($('#TrainingStartDateString'), {
+                value: @Html.Raw(Json.Encode(Model.TrainingStartDateString))
+            });
             DefineGroomerSection();
+
+            $('#Availability').prop("checked", @Html.Raw(Json.Encode(Model.Availability)));
 
             $('#EndClientEnum').change(function () {
                 DefineGroomerSection();
@@ -80,9 +85,9 @@
                         <a href="/Account/EndUserRegister/"><i class="fa fa-arrow-circle-left float-right" aria-hidden="true"></i></a>
                     </h2>
                     <hr />
-                    
+
                     <div class="row">
-                        <div class="col-lg-6 col-12">
+                        <div class="offset-lg-3 col-lg-6 col-12">
                             <div class="form-group row">
                                 <div class="col-12">
                                     <div class="avatar-upload">
@@ -149,7 +154,7 @@
                             </div>
                         </div>
 
-                        <div id="groomer-section" class="col-12 d-none">
+                        <div id="groomer-section" class="col-12 d-none mt-3">
                             <div class="row">
                                 <div class="col-lg-6 col-12">
                                     <fieldset>

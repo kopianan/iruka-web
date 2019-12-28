@@ -132,7 +132,7 @@ namespace Iruka.Controllers
                     CoverageArea = userDTO.CoverageArea ?? "",
                     YearsOfExperience = userDTO.YearsOfExperience ?? 0,
                     Availability = userDTO.Availability,
-                    Styling = userDTO.Clipping,
+                    Styling = userDTO.Styling,
                     Clipping = userDTO.Clipping,
                     TrainingYears = userDTO.TrainingYears ?? 0,
                     TrainingCourses = userDTO.TrainingCourses
@@ -143,6 +143,9 @@ namespace Iruka.Controllers
                     newUser.TrainingStartDate = Global.ParseStringToDate(userDTO.TrainingStartDateString);
                 }
                 catch (FormatException)
+                {
+                }
+                catch (ArgumentNullException)
                 {
                 }
 
@@ -273,6 +276,7 @@ namespace Iruka.Controllers
 
             var userDTO = Mapper.Map<ApplicationUser, UserDTO>(user);
             userDTO.EndClientEnum = DALUsers.GetEndUserRoleEnum(userDTO.Id);
+            userDTO.TrainingStartDateString = Global.DateTimeToPostableString(user.TrainingStartDate);
 
             ViewBag.UserId = User.Identity.GetUserId(); return View(userDTO);
         }
@@ -304,6 +308,9 @@ namespace Iruka.Controllers
                 targetUser.TrainingStartDate = Global.ParseStringToDate(userDTO.TrainingStartDateString);
             }
             catch (FormatException)
+            {
+            }
+            catch (ArgumentNullException)
             {
             }
 

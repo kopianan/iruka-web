@@ -165,6 +165,49 @@ function deleteUser(id, internalUser) {
     });
 }
 
+function InitCitySearchAutoComplete() {
+    let elem = $("#CoverageArea");
+    let option = {};
+    let targetDataSource = new kendo.data.DataSource
+        ({
+            transport: {
+                read: function (options) {
+                    var data = [];
+
+                    $.ajax({
+                        url: `/API/External/GetAllCitiesOfIndonesia`,
+                        method: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async: false,
+                        success: function (response) {
+                            data = response;
+                        },
+                        error: function (response) {
+                            let { responseJSON } = response;
+                            ClinicGlobal.ShowNotification({
+                                text: `There has been an error retrieving data from the server!
+                                                                                                                                                                                                                Exception: ${responseJSON.ExceptionMessage}`,
+                                type: 'error',
+                                timeout: false
+                            });
+                        }
+                    });
+
+                    options.success(data);
+                }
+            }
+        });
+
+    option.select = function (e) {
+
+    };
+    option.dataSource = targetDataSource;
+    option.placeholder = "Search city...";
+    Global.InitKendoAutoComplete(elem, option);
+}
+
 $(document).ready(function () {
     initDataTable();
+    InitCitySearchAutoComplete();
 });

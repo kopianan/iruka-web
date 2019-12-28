@@ -15,7 +15,7 @@ namespace Iruka.Controllers.API
         [HttpGet]
         public IHttpActionResult GetAllCitiesOfIndonesia()
         {
-            return Content(HttpStatusCode.OK, Global.GetAllCitiesOfIndonesia());
+            return Ok(Global.GetAllCitiesOfIndonesia());
         }
     }
 }

@@ -244,7 +244,7 @@
                                         <div class="form-group row">
                                             @Html.LabelFor(m => m.YearsOfExperience, new { @class = "col-12 control-label" })
                                             <div class="col-12">
-                                                @Html.TextBoxFor(m => m.YearsOfExperience, new { @class = "form-control", @type = "number" })
+                                                @Html.TextBoxFor(m => m.YearsOfExperience, new { @class = "form-control", @type = "number", @Value = 0 })
                                                 @Html.ValidationMessageFor(m => m.YearsOfExperience, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -292,7 +292,7 @@
                                         <div class="form-group row">
                                             @Html.LabelFor(m => m.TrainingYears, new { @class = "col-12 control-label" })
                                             <div class="col-12">
-                                                @Html.TextBoxFor(m => m.TrainingYears, new { @class = "form-control", @type = "number" })
+                                                @Html.TextBoxFor(m => m.TrainingYears, new { @class = "form-control", @type = "number", @Value = 0 })
                                                 @Html.ValidationMessageFor(m => m.TrainingYears, "", new { @class = "text-danger" })
                                             </div>
                                         </div>

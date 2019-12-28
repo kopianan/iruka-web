@@ -126,6 +126,25 @@ namespace Iruka.DAL
             }
         }
 
+        public static string DateTimeToPostableString(DateTime? dateTime)
+        {
+            if (dateTime != null)
+            {
+                if (((DateTime)dateTime).TimeOfDay > new TimeSpan(0, 0, 0, 0))
+                {
+                    return ((DateTime)dateTime).ToString("dd-MM-yyyy HH:mm");
+                }
+                else
+                {
+                    return ((DateTime)dateTime).ToString("dd-MM-yyyy");
+                }
+            }
+            else
+            {
+                return "day-month-year";
+            }
+        }
+
         public static string GetUserNameById(string customerId)
         {
             try
@@ -156,7 +175,7 @@ namespace Iruka.DAL
             {
                 toReturn.Add(new
                 {
-                    Values = city.type + " " + city.city_name + ", " + city.province
+                    Value = city.type + " " + city.city_name + ", " + city.province
                 });
             }
 
