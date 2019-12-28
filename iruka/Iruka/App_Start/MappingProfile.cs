@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Iruka.EF.Model;
 using Iruka.Models;
+using static Iruka.Controllers.MobileController;
 using static Iruka.DAL.TransactionDal;
 
 namespace Iruka.App_Start
@@ -9,6 +10,8 @@ namespace Iruka.App_Start
     {
         public MappingProfile()
         {
+            CreateMap<MobileUserDto, ApplicationUser>()
+                .ForMember(c => c.TrainingStartDate, opt => opt.Ignore());
             CreateMap<ApplicationUser, UserDTO>();
             CreateMap<Product, ProductDTO>();
             CreateMap<ProductDTO, Product>();
@@ -25,6 +28,7 @@ namespace Iruka.App_Start
                 .ForMember(c => c.CreatedDate, opt => opt.Ignore());
 
             CreateMap<ApplicationUser, CustomerDataDto>();
+            CreateMap<ApplicationUser, MobileUserViewModel>();
             CreateMap<Branch, BranchDto>();
         }
     }

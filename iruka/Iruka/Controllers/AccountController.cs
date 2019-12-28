@@ -235,9 +235,16 @@ namespace Iruka.Controllers
 
             if (targetUser.Picture != userDTO.Picture)
             {
-                targetUser.Picture = string.IsNullOrWhiteSpace(userDTO.Picture) ? "" : "/Media/UserPicture/" + userDTO.Picture;
-                var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
-                Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+                if (string.IsNullOrWhiteSpace(userDTO.Picture))
+                {
+                    targetUser.Picture = "";
+                }
+                else
+                {
+                    targetUser.Picture = "/Media/UserPicture/" + userDTO.Picture;
+                    var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
+                    Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+                }
             }
 
             var roleStore = new RoleStore<IdentityRole>(db);
@@ -313,9 +320,16 @@ namespace Iruka.Controllers
 
             if (targetUser.Picture != userDTO.Picture)
             {
-                targetUser.Picture = string.IsNullOrWhiteSpace(userDTO.Picture) ? "" : "/Media/UserPicture/" + userDTO.Picture;
-                var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
-                Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+                if (string.IsNullOrWhiteSpace(userDTO.Picture))
+                {
+                    targetUser.Picture = "";
+                }
+                else
+                {
+                    targetUser.Picture = "/Media/UserPicture/" + userDTO.Picture;
+                    var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/UserPicture");
+                    Global.SaveBase64DataUrlFile(userDTO.Base64URL, userDTO.Picture, savePath);
+                }
             }
 
             var roleStore = new RoleStore<IdentityRole>(db);
@@ -336,9 +350,16 @@ namespace Iruka.Controllers
             {
                 if (targetUser.Certificate != userDTO.Certificate)
                 {
-                    targetUser.Certificate = string.IsNullOrWhiteSpace(userDTO.Certificate) ? "" : "/Media/Certificate/" + userDTO.Certificate;
-                    var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Certificate");
-                    Global.SaveBase64DataUrlFile(userDTO.Base64URLCertificate, userDTO.Certificate, savePath);
+                    if (string.IsNullOrWhiteSpace(userDTO.Certificate))
+                    {
+                        targetUser.Certificate = "";
+                    }
+                    else
+                    {
+                        targetUser.Certificate = "/Media/Certificate/" + userDTO.Certificate;
+                        var savePath = System.Web.HttpContext.Current.Server.MapPath("~/Media/Certificate");
+                        Global.SaveBase64DataUrlFile(userDTO.Base64URLCertificate, userDTO.Certificate, savePath);
+                    }
                 }
             }
             else

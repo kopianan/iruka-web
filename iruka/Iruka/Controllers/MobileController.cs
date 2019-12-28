@@ -1,19 +1,23 @@
-﻿using Iruka.DAL;
+﻿using AutoMapper;
+using Iruka.DAL;
 using Iruka.ModelAPI;
 using Iruka.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using static Iruka.EF.Model.Enum;
 
 namespace Iruka.Controllers
 {
@@ -97,23 +101,8 @@ namespace Iruka.Controllers
                     {
                         var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                         var role = um.GetRoles(getUser.Id).FirstOrDefault();
-                        var User = new
-                        {
-                            getUser.Id,
-                            getUser.Name,
-                            getUser.Certificate,
-                            getUser.Description,
-                            getUser.Address,
-                            getUser.Picture,
-                            getUser.IsActive,
-                            getUser.CreatedDate,
-                            getUser.Email,
-                            getUser.PhoneNumber,
-                            getUser.UserName,
-                            getUser.PIC,
-                            getUser.Show,
-                            role
-                        };
+                        var User = Mapper.Map<ApplicationUser, MobileUserViewModel>(getUser);
+                        User.Role = role;
 
                         if (role == "Groomer" || role == "Customer" || role == "Owner")
                         {
@@ -199,28 +188,15 @@ namespace Iruka.Controllers
         {
             try
             {
-                var usersWithRoles = Global.DB.Users.ToList();
-                List<UserDTO> listUser = new List<UserDTO>();
-
+                var listUser = new List<MobileUserViewModel>();
                 var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                var tempUser = um.Users.ToList();
-                foreach (var item in tempUser)
+                var targetUsers = um.Users.Where(x => x.IsActive).ToList();
+
+                foreach (var user in targetUsers)
                 {
-                    if (um.IsInRole(item.Id, request.Role))
+                    if (um.IsInRole(user.Id, request.Role))
                     {
-                        listUser.Add(new UserDTO
-                        {
-                            Id = item.Id,
-                            Name = item.Name,
-                            Email = item.Email,
-                            Certificate = item.Certificate,
-                            PhoneNumber = item.PhoneNumber,
-                            Address = item.Address,
-                            Description = item.Description,
-                            Picture = item.Picture,
-                            PIC = item.PIC,
-                            Show = item.Show
-                        });
+                        listUser.Add(Mapper.Map<ApplicationUser, MobileUserViewModel>(user));
                     }
                 }
 
@@ -228,7 +204,7 @@ namespace Iruka.Controllers
             }
             catch (Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, Global.Message_WrongAccessKey);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, Global.Message_ErrorMessage);
             }
         }
 
@@ -240,16 +216,11 @@ namespace Iruka.Controllers
                 var db = Global.DB;
                 var root = HttpContext.Current.Server.MapPath("~/Media/");
                 var startingPosition = root.Length - 6;
-                var role = "";
-                var name = "";
-                var email = "";
-                var password = "";
-                var phonenumber = "";
-                var address = "";
-                var description = "";
-                var pic = "";
-
+                var newUserDto = new MobileUserDto();
+                var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var passwordHasher = new PasswordHasher();
                 var provider = new CustomMultipartFormDataStreamProvider(root);
+
                 // Check if the request contains multipart/form-data.
                 if (!Request.Content.IsMimeMultipartContent())
                 {
@@ -259,53 +230,30 @@ namespace Iruka.Controllers
                 StringBuilder sb = new StringBuilder(); // Holds the response body
                                                         // Read the form data and return an async task.
                 await Request.Content.ReadAsMultipartAsync(provider);
+
                 // This illustrates how to get the form data.
                 foreach (var key in provider.FormData.AllKeys)
                 {
-                    foreach (var val in provider.FormData.GetValues(key))
+                    foreach (var value in provider.FormData.GetValues(key))
                     {
                         if (key.Equals("accessKey"))
                         {
-                            if (!Global.CheckAccessKey(val))
+                            if (!Global.CheckAccessKey(value))
                             {
                                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Global.Message_WrongAccessKey);
                             }
                         }
-                        else if (key.Equals("Name"))
+
+                        foreach (PropertyInfo propertyInfo in newUserDto.GetType().GetProperties())
                         {
-                            name = val;
-                        }
-                        else if (key.Equals("Email"))
-                        {
-                            email = val;
-                        }
-                        else if (key.Equals("Password"))
-                        {
-                            password = val;
-                        }
-                        else if (key.Equals("Phonenumber"))
-                        {
-                            phonenumber = val;
-                        }
-                        else if (key.Equals("Address"))
-                        {
-                            address = val;
-                        }
-                        else if (key.Equals("Description"))
-                        {
-                            description = val;
-                        }
-                        else if (key.Equals("Role"))
-                        {
-                            role = val;
-                        }
-                        else if (key.Equals("PIC"))
-                        {
-                            pic = val;
-                        }
-                        else
-                        {
-                            sb.Append(string.Format("{0}: {1}\n", key, val));
+                            if (key.Equals(propertyInfo.Name))
+                            {
+                                var propType = newUserDto.GetType().GetProperty(propertyInfo.Name).PropertyType;
+                                var converter = TypeDescriptor.GetConverter(propType);
+                                var convertedObject = converter.ConvertFromString(value);
+
+                                newUserDto.GetType().GetProperty(propertyInfo.Name).SetValue(newUserDto, convertedObject);
+                            }
                         }
                     }
                 }
@@ -336,55 +284,54 @@ namespace Iruka.Controllers
                 }
 
                 var pathUrl = provider.FileData.Count() == 0 ? null : Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
-                var passwordHasher = new PasswordHasher();
 
                 var user = new ApplicationUser
                 {
-                    Name = name,
-                    UserName = email,
-                    Email = email,
                     CreatedDate = DateTime.Now,
-                    PasswordHash = passwordHasher.HashPassword(password),
-                    PhoneNumber = phonenumber,
-                    Address = address,
-                    Description = description,
+                    PasswordHash = passwordHasher.HashPassword(newUserDto.Password),
+                    Name = newUserDto.Name,
+                    UserName = newUserDto.Email,
+                    Email = newUserDto.Email,
+                    PhoneNumber = newUserDto.PhoneNumber,
+                    Address = newUserDto.Address,
+                    Description = newUserDto.Description,
                     Picture = pathUrl,
-                    PIC = pic
+                    PIC = newUserDto.PIC,
+                    KeyFeatures = newUserDto.KeyFeatures,
+                    CoverageArea = newUserDto.CoverageArea,
+                    YearsOfExperience = newUserDto.YearsOfExperience,
+                    Availability = newUserDto.Availability,
+                    Styling = newUserDto.Styling,
+                    Clipping = newUserDto.Styling,
+                    TrainingYears = newUserDto.TrainingYears,
+                    TrainingCourses = newUserDto.TrainingCourses
                 };
+
+                try
+                {
+                    user.TrainingStartDate = Global.ParseStringToDate(newUserDto.TrainingStartDate);
+                }
+                catch (FormatException)
+                {
+                }
+                catch (ArgumentNullException)
+                {
+                }
 
                 db.Users.Add(user);
 
                 IdentityUserRole userRole = new IdentityUserRole();
                 userRole.UserId = user.Id;
-                userRole.RoleId = role;
+                userRole.RoleId = newUserDto.Role;
                 db.UserRoles.Add(userRole);
                 db.SaveChanges();
 
-                var getUser = db.Users.FirstOrDefault(item => item.UserName == email);
-
-                var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var getUser = db.Users.SingleOrDefault(item => item.Email == newUserDto.Email);
                 var roleUser = um.GetRoles(getUser.Id).FirstOrDefault();
-
-                var User = new
-                {
-                    getUser.Id,
-                    getUser.Name,
-                    getUser.Certificate,
-                    getUser.Description,
-                    getUser.Address,
-                    getUser.Picture,
-                    getUser.IsActive,
-                    getUser.CreatedDate,
-                    getUser.Email,
-                    getUser.PhoneNumber,
-                    getUser.UserName,
-                    getUser.PIC,
-                    getUser.Show,
-                    role = roleUser
-                };
+                var User = Mapper.Map<ApplicationUser, MobileUserViewModel>(getUser);
+                User.Role = roleUser;
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
-
             }
             catch (NullReferenceException)
             {
@@ -408,15 +355,9 @@ namespace Iruka.Controllers
                 var db = Global.DB;
                 var root = HttpContext.Current.Server.MapPath("~/Media/");
                 var startingPosition = root.Length - 6;
-                var id = "";
-                var name = "";
-                var phonenumber = "";
-                var address = "";
-                var description = "";
-                var pic = "";
-                var show = "";
-
+                var editUserDto = new MobileUserDto();
                 var provider = new CustomMultipartFormDataStreamProvider(root);
+
                 // Check if the request contains multipart/form-data.
                 if (!Request.Content.IsMimeMultipartContent())
                 {
@@ -426,49 +367,29 @@ namespace Iruka.Controllers
                 StringBuilder sb = new StringBuilder(); // Holds the response body
                                                         // Read the form data and return an async task.
                 await Request.Content.ReadAsMultipartAsync(provider);
+
                 // This illustrates how to get the form data.
                 foreach (var key in provider.FormData.AllKeys)
                 {
-                    foreach (var val in provider.FormData.GetValues(key))
+                    foreach (var value in provider.FormData.GetValues(key))
                     {
                         if (key.Equals("accessKey"))
                         {
-                            if (!Global.CheckAccessKey(val))
+                            if (!Global.CheckAccessKey(value))
                             {
                                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Global.Message_WrongAccessKey);
                             }
                         }
-                        else if (key.Equals("Id"))
+                        foreach (PropertyInfo propertyInfo in editUserDto.GetType().GetProperties())
                         {
-                            id = val;
-                        }
-                        else if (key.Equals("Name"))
-                        {
-                            name = val;
-                        }
-                        else if (key.Equals("Phonenumber"))
-                        {
-                            phonenumber = val;
-                        }
-                        else if (key.Equals("Address"))
-                        {
-                            address = val;
-                        }
-                        else if (key.Equals("Description"))
-                        {
-                            description = val;
-                        }
-                        else if (key.Equals("PIC"))
-                        {
-                            pic = val;
-                        }
-                        else if (key.Equals("Show"))
-                        {
-                            show = val;
-                        }
-                        else
-                        {
-                            sb.Append(string.Format("{0}: {1}\n", key, val));
+                            if (key.Equals(propertyInfo.Name))
+                            {
+                                var propType = editUserDto.GetType().GetProperty(propertyInfo.Name).PropertyType;
+                                var converter = TypeDescriptor.GetConverter(propType);
+                                var convertedObject = converter.ConvertFromString(value);
+
+                                editUserDto.GetType().GetProperty(propertyInfo.Name).SetValue(editUserDto, convertedObject);
+                            }
                         }
                     }
                 }
@@ -498,45 +419,45 @@ namespace Iruka.Controllers
                     sb.Append(string.Format("{0}", root));
                 }
 
-                var targetUser = db.Users.SingleOrDefault(x => x.Id == id);
-                targetUser.Name = name;
-                targetUser.PhoneNumber = phonenumber;
-                targetUser.Address = address;
-                targetUser.Description = description;
-                targetUser.PIC = pic;
+                var targetUser = db.Users.SingleOrDefault(x => x.Id == editUserDto.Id);
+                targetUser.Name = editUserDto.Name;
+                targetUser.PhoneNumber = editUserDto.PhoneNumber;
+                targetUser.Address = editUserDto.Address;
+                targetUser.Description = editUserDto.Description;
+                targetUser.PIC = editUserDto.PIC;
+                targetUser.Show = editUserDto.Show;
+                targetUser.KeyFeatures = editUserDto.KeyFeatures;
+                targetUser.CoverageArea = editUserDto.CoverageArea;
+                targetUser.YearsOfExperience = editUserDto.YearsOfExperience;
+                targetUser.Availability = editUserDto.Availability;
+                targetUser.Styling = editUserDto.Styling;
+                targetUser.Clipping = editUserDto.Styling;
+                targetUser.TrainingYears = editUserDto.TrainingYears;
+                targetUser.TrainingCourses = editUserDto.TrainingCourses;
+
+                try
+                {
+                    targetUser.TrainingStartDate = Global.ParseStringToDate(editUserDto.TrainingStartDate);
+                }
+                catch (FormatException)
+                {
+                }
+                catch (ArgumentNullException)
+                {
+                }
 
                 if (provider.FileData.Count() > 0)
                 {
                     targetUser.Picture = Global.GetServerPathFromAUploadPath(sb.ToString(), 3);
                 }
 
-                targetUser.Show = show == "true" ? true : false;
-
                 db.SaveChanges();
 
                 var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                 var roleUser = um.GetRoles(targetUser.Id).FirstOrDefault();
-
-                var User = new
-                {
-                    targetUser.Id,
-                    targetUser.Name,
-                    targetUser.Certificate,
-                    targetUser.Description,
-                    targetUser.Address,
-                    targetUser.Picture,
-                    targetUser.IsActive,
-                    targetUser.CreatedDate,
-                    targetUser.Email,
-                    targetUser.PhoneNumber,
-                    targetUser.UserName,
-                    targetUser.PIC,
-                    targetUser.Show,
-                    role = roleUser
-                };
+                var User = Mapper.Map<ApplicationUser, MobileUserViewModel>(targetUser);
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
-
             }
             catch (NullReferenceException)
             {
@@ -582,6 +503,58 @@ namespace Iruka.Controllers
             {
                 return BadRequest(Global.Message_ErrorMessage);
             }
+        }
+
+        public class MobileUserViewModel
+        {
+            public string Id { get; set; }
+            public string Email { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Address { get; set; }
+            public string PhoneNumber { get; set; }
+            public string Picture { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public string PIC { get; set; }
+            public string KeyFeatures { get; set; }
+            public string CoverageArea { get; set; }
+            public int YearsOfExperience { get; set; }
+            public bool Availability { get; set; }
+            public int Styling { get; set; }
+            public int Clipping { get; set; }
+            public DateTime? TrainingStartDate { get; set; }
+            public int TrainingYears { get; set; }
+            public string TrainingCourses { get; set; }
+            public bool Show { get; set; }
+            public string Certificate { get; set; }
+            public string Role { get; set; }
+            public bool IsActive { get; set; }
+        }
+
+        public class MobileUserDto
+        {
+            public string Id { get; set; }
+            public string Password { get; set; }
+            public string Email { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Address { get; set; }
+            public string PhoneNumber { get; set; }
+            public string Picture { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public string PIC { get; set; }
+            public string KeyFeatures { get; set; }
+            public string CoverageArea { get; set; }
+            public int YearsOfExperience { get; set; }
+            public bool Availability { get; set; }
+            public GroomerRating Styling { get; set; }
+            public GroomerRating Clipping { get; set; }
+            public string TrainingStartDate { get; set; }
+            public int TrainingYears { get; set; }
+            public string TrainingCourses { get; set; }
+            public bool Show { get; set; }
+            public string Certificate { get; set; }
+            public string Role { get; set; }
         }
     }
 }
