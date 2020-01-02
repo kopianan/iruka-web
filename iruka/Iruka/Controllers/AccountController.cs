@@ -173,16 +173,13 @@ namespace Iruka.Controllers
 
                     var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
                     var roleManager = new RoleManager<IdentityRole>(roleStore);
+                    var targetRole = userDTO.EndClientEnum == EndClientEnum.CSS ? "Clinic/Salon/Shop" : userDTO.EndClientEnum.ToString();
 
-                    if (!await roleManager.RoleExistsAsync(Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString()))))
+                    if (!await roleManager.RoleExistsAsync(targetRole))
                     {
-                        await roleManager.CreateAsync(new IdentityRole(Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString()))));
-                        await UserManager.AddToRoleAsync(newUser.Id, Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString())));
+                        await roleManager.CreateAsync(new IdentityRole(targetRole));
                     }
-                    else
-                    {
-                        await UserManager.AddToRoleAsync(newUser.Id, Enum.GetName(typeof(EndClientEnum), Enum.Parse(typeof(EndClientEnum), userDTO.EndClientEnum.ToString())));
-                    }
+                    await UserManager.AddToRoleAsync(newUser.Id, targetRole);
 
                     ViewBag.UserId = User.Identity.GetUserId(); db.SaveChanges();
                     return RedirectToAction("EndUserRegister");
@@ -336,15 +333,13 @@ namespace Iruka.Controllers
             var roleManager = new RoleManager<IdentityRole>(roleStore);
             await ClearAllRolesFromUser(targetUser.Id);
             db.Entry(targetUser).State = EntityState.Modified;
-            if (!await roleManager.RoleExistsAsync(userDTO.EndClientEnum.ToString()))
+            var targetRole = userDTO.EndClientEnum == EndClientEnum.CSS ? "Clinic/Salon/Shop" : userDTO.EndClientEnum.ToString();
+
+            if (!await roleManager.RoleExistsAsync(targetRole))
             {
-                await roleManager.CreateAsync(new IdentityRole(userDTO.EndClientEnum.ToString()));
-                await UserManager.AddToRoleAsync(targetUser.Id, userDTO.EndClientEnum.ToString());
+                await roleManager.CreateAsync(new IdentityRole(targetRole));
             }
-            else
-            {
-                await UserManager.AddToRoleAsync(targetUser.Id, userDTO.EndClientEnum.ToString());
-            }
+            await UserManager.AddToRoleAsync(targetUser.Id, targetRole);
 
             if (userDTO.EndClientEnum == EndClientEnum.Groomer)
             {
