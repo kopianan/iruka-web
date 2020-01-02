@@ -33,7 +33,8 @@ namespace Iruka.EF.Model
         public enum EndClientEnum
         {
             Groomer,
-            Salon,
+            [Display(Name = "Clinic/Salon/Shop")]
+            CSS,
             Customer
         }
 
@@ -46,7 +47,8 @@ namespace Iruka.EF.Model
             [Display(Name = "Content Manager")]
             ContentManager,
             Groomer,
-            Salon,
+            [Display(Name = "Clinic/Salon/Shop")]
+            CSS,
             Customer
         }
 

@@ -18,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in DALUsers.GetAllUserBaseOnRole(new List<string> { RoleList.Groomer, RoleList.Salon, RoleList.Customer }))
+            @foreach (var item in DALUsers.GetAllUserBaseOnRole(new List<string> { RoleList.Groomer, RoleList.CSS, RoleList.Customer }))
             {
                 <tr>
                     <td>@item.Role</td>

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -134,20 +135,24 @@ namespace Iruka.Controllers
         {
             try
             {
-                var getRoleList = db.Roles.ToList();
-                List<object> RoleList = new List<object>();
-                foreach (var item in getRoleList)
-                {
-                    if (item.Name == "Groomer" || item.Name == "Customer" || item.Name == "Owner")
-                    {
-                        var obj = new { item.Id, item.Name };
+                var EndUserRoles = System.Enum.GetNames(typeof(EndClientEnum)).ToList();
+                var RoleList = new List<string>();
 
-                        RoleList.Add(obj);
+                foreach (var role in EndUserRoles)
+                {
+                    if (role == "CSS")
+                    {
+                        RoleList.Add("Clinic/Salon/Shop");
+                    }
+                    else
+                    {
+                        RoleList.Add(role);
                     }
                 }
+
                 return Request.CreateResponse(HttpStatusCode.OK, new { RoleList }, MediaTypeHeaderValue.Parse("application/json"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, Global.Message_WrongAccessKey);
             }
@@ -220,6 +225,8 @@ namespace Iruka.Controllers
                 var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                 var passwordHasher = new PasswordHasher();
                 var provider = new CustomMultipartFormDataStreamProvider(root);
+                var roleStore = new RoleStore<IdentityRole>(db);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
 
                 // Check if the request contains multipart/form-data.
                 if (!Request.Content.IsMimeMultipartContent())
@@ -320,9 +327,14 @@ namespace Iruka.Controllers
 
                 db.Users.Add(user);
 
+                if (!roleManager.RoleExists(newUserDto.Role))
+                {
+                    roleManager.Create(new IdentityRole(newUserDto.Role));
+                }
+
                 IdentityUserRole userRole = new IdentityUserRole();
-                userRole.UserId = user.Id;
-                userRole.RoleId = newUserDto.Role;
+                userRole.UserId = user.Id; 
+                userRole.RoleId = roleManager.FindByName(newUserDto.Role).Id;
                 db.UserRoles.Add(userRole);
                 db.SaveChanges();
 
@@ -341,9 +353,9 @@ namespace Iruka.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Global.Message_ErrorMessage);
             }
-            catch (Exception e)
+            catch (DbEntityValidationException)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, Global.Message_ErrorMessage);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Request has invalid data!");
             }
         }
 
@@ -456,6 +468,7 @@ namespace Iruka.Controllers
                 var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                 var roleUser = um.GetRoles(targetUser.Id).FirstOrDefault();
                 var User = Mapper.Map<ApplicationUser, MobileUserViewModel>(targetUser);
+                User.Role = roleUser;
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { User }, MediaTypeHeaderValue.Parse("application/json"));
             }
@@ -482,6 +495,38 @@ namespace Iruka.Controllers
                 {
                     var targetUser = db.Users.SingleOrDefault(x => x.Id == userId);
                     targetUser.Show = status;
+                    db.SaveChanges();
+
+                    return Ok("Action successful!");
+                }
+                else
+                {
+                    return BadRequest(Global.Message_WrongAccessKey);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return BadRequest(Global.Message_NoData);
+            }
+            catch (AccessViolationException)
+            {
+                return BadRequest(Global.Message_NoAccessKey);
+            }
+            catch (Exception)
+            {
+                return BadRequest(Global.Message_ErrorMessage);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult ChangeGroomerAvailabilityStatus([FromUri] string userId, bool status)
+        {
+            try
+            {
+                if (Global.CheckAccessKey(Global.GetAccessKeyFromHeader(Request)))
+                {
+                    var targetUser = db.Users.SingleOrDefault(x => x.Id == userId);
+                    targetUser.Availability = status;
                     db.SaveChanges();
 
                     return Ok("Action successful!");

@@ -65,7 +65,7 @@ namespace Iruka.Controllers
                 customerDataDto.PurchaseableCoupons = new List<CouponDto>();
 
                 if (Global.CheckIfUserInRole(
-                    Global.GetUserRole(targetCustomer.Id), new List<string> { RoleList.Customer, RoleList.Groomer, RoleList.Salon }))
+                    Global.GetUserRole(targetCustomer.Id), new List<string> { RoleList.Customer, RoleList.Groomer, RoleList.CSS }))
                 {
                     var guidCustomerId = Guid.Parse(targetCustomer.Id);
                     var purchaseableCoupons = db.Coupons.Where(x

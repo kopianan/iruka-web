@@ -185,12 +185,7 @@ function InitCitySearchAutoComplete() {
                         },
                         error: function (response) {
                             let { responseJSON } = response;
-                            ClinicGlobal.ShowNotification({
-                                text: `There has been an error retrieving data from the server!
-                                                                                                                                                                                                                Exception: ${responseJSON.ExceptionMessage}`,
-                                type: 'error',
-                                timeout: false
-                            });
+                            toastr.error(response);
                         }
                     });
 
