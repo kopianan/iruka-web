@@ -59,7 +59,6 @@ $('#ScheduleDate').datetimepicker({
 function InitOnGoingEventsDataTable() {
 
     onGoingDataTable = $('#ongoing-events-table').DataTable({
-        responsive: true,
         "pageLength": 10,
         rowReorder: true,
         columnDefs: [
@@ -68,27 +67,28 @@ function InitOnGoingEventsDataTable() {
         ],
         "order": [[0, "asc"]],
         "bLengthChange": false,
-        "bInfo": false
+        "bInfo": false,
+        scrollX: true
     });
 }
 
 function InitPendingEventsDataTable() {
     pendingDataTable = $('#pending-events-table').DataTable({
-        responsive: true,
         "pageLength": 10,
         "order": [],
         "bLengthChange": false,
-        "bInfo": false
+        "bInfo": false,
+        scrollX: true
     });
 }
 
 function InitFinishedEventsDataTable() {
     finishedDataTable = $('#finished-events-table').DataTable({
-        responsive: true,
         "pageLength": 10,
         "order": [],
         "bLengthChange": false,
-        "bInfo": false
+        "bInfo": false,
+        scrollX: true
     });
 }
 

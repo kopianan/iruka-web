@@ -59,7 +59,6 @@ $('#ScheduleDate').datetimepicker({
 function InitOnGoingProductsDataTable() {
 
     onGoingDataTable = $('#ongoing-products-table').DataTable({
-        responsive: true,
         "pageLength": 10,
         rowReorder: true,
         columnDefs: [
@@ -68,27 +67,28 @@ function InitOnGoingProductsDataTable() {
         ],
         "order": [[0, "asc"]],
         "bLengthChange": false,
-        "bInfo": false
+        "bInfo": false,
+        "scrollX": true
     });
 }
 
 function InitPendingProductsDataTable() {
     pendingDataTable = $('#pending-products-table').DataTable({
-        responsive: true,
         "pageLength": 10,
         "order": [],
         "bLengthChange": false,
-        "bInfo": false
+        "bInfo": false,
+        "scrollX": true
     });
 }
 
 function InitFinishedProductsDataTable() {
     finishedDataTable = $('#finished-products-table').DataTable({
-        responsive: true,
         "pageLength": 10,
         "order": [],
         "bLengthChange": false,
-        "bInfo": false
+        "bInfo": false,
+        "scrollX": true
     });
 }
 

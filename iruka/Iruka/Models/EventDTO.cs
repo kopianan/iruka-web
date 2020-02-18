@@ -8,7 +8,7 @@ namespace Iruka.Models
         public Guid Id { get; set; }
 
         [Required]
-        [Display(Name = "Event Name")]
+        [Display(Name = "Title")]
         public string EventName { get; set; }
 
         [Required]
