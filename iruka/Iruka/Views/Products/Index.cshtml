@@ -228,7 +228,7 @@
                                             <td>@item.Priority</td>
                                             <td>@item.ProductName</td>
                                             <td><a href="@item.Link">@item.Link</a></td>
-                                            <td>@item.Description</td>
+                                            <td style="max-width: 100px; white-space: normal">@item.Description</td>
                                             <td>@item.ScheduleDate</td>
                                             <td style="width:10%">
                                                 <button type="button" class="btn btn-secondary btn-fw" onclick="location.href='@Url.Action("Edit", "Products", new {id = item.Id })'" style="min-width:50px">
@@ -263,7 +263,7 @@
                                         <tr>
                                             <td>@item.ProductName</td>
                                             <td><a href="@item.Link">@item.Link</a></td>
-                                            <td>@item.Description</td>
+                                            <td style="max-width: 100px; white-space: normal">@item.Description</td>
                                             <td>@item.ScheduleDate</td>
                                             <td>@item.ModifiedDate</td>
                                         </tr>
